@@ -1,0 +1,48 @@
+<div class="sidebar" [ngClass]="{'sidebaropen': toggleSide}" data-color='red' data-image="">
+    <div class="logo" ng-class="sidebarClass()"><button class="simple-text sidebartoggle" aria-hidden="true" (click)="this.toggleSide = !this.toggleSide"><i class="fa fa-bars"></i></button></div>
+    <div class="sidebar-wrapper">
+        <div class="nav-container">
+            <ul class="nav">
+                <!--<li *ngFor="let menuItem of menuItems" routerLinkActive="active" class="{{menuItem.class}}">
+                    <a [routerLink]="[menuItem.path]">
+                        <i class="material-icons">{{menuItem.icon}}</i>
+                        <p>{{menuItem.title}}</p>
+                    </a>
+                </li>-->
+                <li routerlinkactive="active" class="">
+                    <a [routerLink]="['/dashboard']" >
+                        <i class="material-icons">dashboard</i>
+                        <p>Dashboard</p>
+                    </a>
+                </li>
+                <li routerlinkactive="active" class="">
+                    <a [routerLink]="['/call-anylsis']">
+                        <i class="material-icons">call</i>
+                        <p>Call Analysis</p>
+                    </a>
+                </li>
+                <li routerlinkactive="active" class="">
+                    <a [routerLink]="['/report']">
+                        <i class="material-icons">library_books</i>
+                        <p>Analyzer/Report</p>
+                    </a>
+                </li>
+                <li routerlinkactive="active" class="">
+                    <a [routerLink]="['/history']">
+                        <i class="material-icons">history</i>
+                        <p>History</p>
+                    </a>
+                </li>
+                <li routerlinkactive="active" class="">
+                    <a [routerLink]="['/setting']">
+                        <i class="material-icons">settings</i>
+                        <p>Settings</p>
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+
+    <div class="sidebar-background" style="background-image: url(../assets/img/sidebar-4.jpg)"></div>
+</div>

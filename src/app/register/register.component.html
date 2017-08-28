@@ -1,0 +1,43 @@
+<div class="login login-wrap">
+  <div class="container">
+    <div class="register-wrap">
+      <div class="panel panel-login">
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-lg-12">
+              <form *ngIf="user" [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
+                <h1 class="login-heading"><img src="../assets/img/logo.png" alt="logo" width="250"></h1>
+                <h2><span style="cursor:pointer;">REGISTER</span></h2>
+                <div *ngIf=msg2 class="alert alert-danger alert-dismissable fade in">
+                  <span> {{msg2}} </span>
+                </div>
+
+                <md-input-container class="full-width">
+                  <input mdInput [(ngModel)]="user.name " placeholder="Name" formControlName="name">
+                  <md-error>This field is required</md-error>
+                </md-input-container>
+
+
+                <md-input-container class="full-width">
+                  <input mdInput [(ngModel)]="user.email " formControlName="email" placeholder="Email">
+                  <md-error>This field is required</md-error>
+                  <!--<md-error *ngIf="email.hasError('required')">Correct Email </md-error>-->
+                </md-input-container>
+
+
+                <md-input-container class="full-width">
+                  <input mdInput [(ngModel)]="user.password " formControlName="password" placeholder="Password" type="password">
+                  <md-error>This field is required</md-error>
+                </md-input-container>
+
+                <div class="clearfix form-group text-right">
+                  <button class="btn btn-danger btn-login">Register</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

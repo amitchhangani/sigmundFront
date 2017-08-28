@@ -1,0 +1,148 @@
+<!--<md-tab-group>-->
+
+
+<!--<md-table #table [dataSource]="dataSource">-->
+
+<!--&lt;!&ndash;- Note that these columns can be defined in any order.-->
+<!--The actual rendered columns are set as a property on the row definition" &ndash;&gt;-->
+
+<!--&lt;!&ndash; ID Column &ndash;&gt;-->
+<!--<ng-container cdkColumnDef="userId">-->
+<!--<md-header-cell *cdkHeaderCellDef> ID </md-header-cell>-->
+<!--<md-cell *cdkCellDef="let row"> {{row.id}} </md-cell>-->
+<!--</ng-container>-->
+
+<!--&lt;!&ndash; Progress Column &ndash;&gt;-->
+<!--<ng-container cdkColumnDef="progress">-->
+<!--<md-header-cell *cdkHeaderCellDef> Progress </md-header-cell>-->
+<!--<md-cell *cdkCellDef="let row"> {{row.progress}}% </md-cell>-->
+<!--</ng-container>-->
+
+<!--&lt;!&ndash; Name Column &ndash;&gt;-->
+<!--<ng-container cdkColumnDef="userName">-->
+<!--<md-header-cell *cdkHeaderCellDef> Name </md-header-cell>-->
+<!--<md-cell *cdkCellDef="let row"> {{row.name}} </md-cell>-->
+<!--</ng-container>-->
+
+<!--&lt;!&ndash; Color Column &ndash;&gt;-->
+<!--<ng-container cdkColumnDef="color">-->
+<!--<md-header-cell *cdkHeaderCellDef> Color </md-header-cell>-->
+<!--<md-cell *cdkCellDef="let row" [style.color]="row.color"> {{row.color}} </md-cell>-->
+<!--</ng-container>-->
+
+<!--<md-header-row *cdkHeaderRowDef="displayedColumns"></md-header-row>-->
+<!--<md-row *cdkRowDef="let row; columns: displayedColumns;"></md-row>-->
+<!--</md-table>-->
+
+
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="card chat-card">
+          <div class="card-content">
+            <div class="tab-group">
+              <md-tab-group>
+                <md-tab label="Recommendations">
+                  <!--<md-grid-list cols="4" rowHeight="4:1">-->
+                  <!--<md-grid-tile>Name of Recommendations</md-grid-tile>-->
+                  <!--<md-grid-tile>Triggers</md-grid-tile>-->
+                  <!--<md-grid-tile>Factors</md-grid-tile>-->
+                  <!--<md-grid-tile>Action</md-grid-tile>-->
+                  <!--</md-grid-list>-->
+                  <!--<md-grid-list cols="4" rowHeight="1:1">-->
+                  <!--<md-grid-tile>Name of Recommendations</md-grid-tile>-->
+                  <!--<md-grid-tile>Triggers</md-grid-tile>-->
+                  <!--<md-grid-tile>Factors</md-grid-tile>-->
+                  <!--<md-grid-tile>Action</md-grid-tile>-->
+                  <!--</md-grid-list>-->
+                  <table class="table">
+                    <thead>
+                    <tr>
+                      <th width="28%">Name of Recommendations</th>
+                      <th width="28%">Triggers</th>
+                      <th width="28%">Factors</th>
+                      <th width="16%">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    <tr *ngFor="let template of recommendations; let i=index">
+
+                      <th scope="row">
+                        <md-input-container class="full-width">
+                          <input mdInput placeholder="Name of Recommendations" [(ngModel)]="template.name">
+                        </md-input-container>
+                      </th>
+                      <td>
+                        <tag-input [(ngModel)]="template.tags" placeholder="Enter Tags"></tag-input>
+                      </td>
+                      <td>
+                        <md-input-container class="full-width">
+                          <input mdInput placeholder="Factors" [(ngModel)]="template.factor">
+                        </md-input-container>
+                      </td>
+                      <td>
+                        <button class="btn btn-danger" (click)="saveRecommendations(template,i)"><i
+                          class="material-icons icon">save</i>SAVE
+                        </button>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+                  <div *ngIf="isAddEnable === true" class="mt-2">
+                    <button class="btn btn-info" (click)="addRecommendations()"><i class="material-icons">add_circle_outline</i>
+                      ADD
+                    </button>
+                  </div>
+                </md-tab>
+                <md-tab label="Danger level">
+                  <table class="table">
+                    <thead>
+                    <tr>
+                      <th width="28%">Name of Recommendations</th>
+                      <th width="28%">Triggers</th>
+                      <th width="28%">Factors</th>
+                      <th width="16%">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let template of danger; let i=index">
+                      <th scope="row">
+                        <md-input-container class="full-width">
+                          <input mdInput placeholder="Name of Recommendations" [(ngModel)]="template.name">
+                        </md-input-container>
+                      </th>
+                      <td>
+                        <tag-input [(ngModel)]="template.tags" placeholder="Enter Tags"></tag-input>
+                      </td>
+                      <td>
+                        <md-input-container class="full-width">
+                          <input mdInput placeholder="Factors" [(ngModel)]="template.factor">
+                        </md-input-container>
+                      </td>
+                      <td>
+                        <button class="btn btn-danger" (click)="saveDanger(template,i)"><i class="material-icons icon">save</i>SAVE
+                        </button>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+                  <div *ngIf="isDangerAddEnable === true">
+                    <button class="btn btn-info" (click)="addDanger()"><i class="material-icons">add_circle_outline</i>
+                      ADD
+                    </button>
+                  </div>
+                </md-tab>
+                <md-tab label="Emotion">Content</md-tab>
+                <md-tab label="Details">Content</md-tab>
+              </md-tab-group>
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

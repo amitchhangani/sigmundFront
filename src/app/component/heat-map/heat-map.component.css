@@ -1,0 +1,58 @@
+.green-1{
+    background: #01a653;
+}
+.green-2{
+    background: #2cb346;
+}
+.green-3{
+    background: #56c037;
+}
+.green-4{
+    background: #80cd2a;
+}
+.green-5{
+    background: #aad91c;
+}
+.green-6{
+    background: #d6e50f;
+}
+.yellow{
+    background: #fef201;
+}
+.orange{
+    background: #fabf0e;
+}
+.orange-2{
+    background: #f3901c;
+}
+.red{
+    background: #ef602b;
+}
+
+.heat-map{
+    position: relative;
+}
+
+.heat-map-wrap{ 
+    display: flex;
+    flex-direction: row;
+    height: 30px;
+    position: relative;
+}
+
+.heat-block{
+    height: 100%;
+    width: 10%;
+}
+
+.heat-map .slidearrow{
+    position: absolute;   
+    content: '';
+    width: 0;
+	height: 0;
+	border-left: 10px solid transparent;
+	border-right: 10px solid transparent;
+    border-top: 15px solid #2d2d2d;
+    top: -7px;
+    transition: all 0.4s ease-in;
+}

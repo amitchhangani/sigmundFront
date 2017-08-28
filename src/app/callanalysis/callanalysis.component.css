@@ -1,0 +1,4 @@
+.chat-body{
+	max-height: 475px;
+	overflow: auto;
+}

@@ -1,0 +1,146 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+
+      <div class="col-sm-7">
+        <div class="card chat-card">
+          <div class="card-heading clearfix">
+            <div class="card-heading-left">
+              <div class="btn btn-danger" [ngClass]="{'btn-danger': btnCondition, 'btn-info': !btnCondition}"
+                      (click)="toggleBtnTxt()">
+                <i *ngIf="btnCondition" class="icon material-icons">mic</i>
+                <i *ngIf="!btnCondition" class="material-icons">mic_off</i>
+                {{recordStatus}} Recording
+              </div>
+
+              <div class="btn btn-danger load-file"><i class="icon material-icons">file_upload</i> Load File
+                <input type="file" ng2FileSelect [uploader]="uploader" accept="audio/*" (change)="onChange()"/>
+              </div>
+              <div class="progress" [ngStyle]="{'display': uploader.progress?'block':'none'}">
+                <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': uploader.progress + '%' }"></div>
+              </div>
+            </div>
+            <div class="card-heading-right"><span> 1 of 3</span>
+              <div class="card-heading-rightbtn">
+                <button><i class="icon material-icons">keyboard_arrow_down</i></button>
+                <button><i class="material-icons">keyboard_arrow_up</i></button>
+              </div>
+            </div>
+          </div>
+          <div class="card-content chat-body" *ngIf="message.length > 0">
+            <div *ngFor="let item of message">
+
+              <div class="chat-timeline chat-timeline-right" *ngIf="item.speaker===0">
+                <div class="chat-timeline-avtar">
+                  <figure>T</figure>
+                  <span> Therapist </span></div>
+                <div class="chat-timeline-content">{{item.transcript}}</div>
+              </div>
+
+              <div class="chat-timeline chat-timeline-left" *ngIf="item.speaker > 0 ">
+                <div class="chat-timeline-avtar">
+                  <figure> P </figure>
+                  <span>Patient</span></div>
+                <div class="chat-timeline-content">{{item.transcript}}</div>
+              </div>
+              <!--<chatline *ngFor="let item of chatTimeLine" [chatInfo]="item" [timeLineClass]="item.userChatClass" [chatContent]="item.chatConent"></chatline>-->
+            </div>
+            <div class="voice-loader" *ngIf="!btnCondition"><img src="../assets/img/voice-loader.png" alt=""/></div>
+          </div>
+          <div class="card-content chat-bottom" *ngIf="message.length"></div>
+        </div>
+      </div>
+      <div class="col-sm-5">
+        <div class="card">
+          <div class="card-content">
+            <h4 class="calldanger-title">Call Danger of Self Harm</h4>
+            <figure>
+              <app-heat-map [rangeValue]="40"></app-heat-map>
+            </figure>
+            <h4 class="recommend-title">Recommendations:</h4>
+            <div class="recommendation-box " [ngClass]="{'openbox': highLighteditem === 0}">
+              <div class="recommend-head" (click)="accordionTitleClick(0)">
+                <div class="recommend-head-title"><span>Risk of alcoholism</span></div>
+                <div class="recommend-repeat"><span>4 Times</span></div>
+                <div class="recommend-percent"><span>50%</span></div>
+              </div>
+              <div class="recommend-body" *ngIf="highLighteditem === 0">
+                <label><strong>drinking</strong></label>,
+                <label class="selected"><strong>drinking</strong></label>,
+              </div>
+            </div>
+            <div class="recommendation-box" [ngClass]="{'openbox': highLighteditem === 1}">
+              <div class="recommend-head" (click)="accordionTitleClick(1)">
+                <div class="recommend-head-title"><span>Likelihood of Depression</span></div>
+                <div class="recommend-repeat"><span>4 Times</span></div>
+                <div class="recommend-percent"><span>50%</span></div>
+              </div>
+              <div class="recommend-body" *ngIf="highLighteditem === 1">
+                <label><strong>drinking</strong></label>,
+                <label class="selected"><strong>drinking</strong></label>,
+              </div>
+            </div>
+            <div class="recommendation-box" [ngClass]="{'openbox': highLighteditem === 2}">
+              <div class="recommend-head " (click)="accordionTitleClick(2)">
+                <div class="recommend-head-title"><span>Low self-esteem detected </span></div>
+                <div class="recommend-repeat"><span>4 Times</span></div>
+                <div class="recommend-percent"><span>50%</span></div>
+              </div>
+              <div class="recommend-body" *ngIf="highLighteditem === 2">
+                <label><strong>drinking</strong></label>,
+                <label class="selected"><strong>drinking</strong></label>,
+              </div>
+            </div>
+            <div class="recommendation-box" [ngClass]="{'openbox': highLighteditem === 3}">
+              <div class="recommend-head " (click)="accordionTitleClick(3)">
+                <div class="recommend-head-title"><span>Lack of confidence detected </span></div>
+                <div class="recommend-repeat"><span>4 Times</span></div>
+                <div class="recommend-percent"><span>50%</span></div>
+              </div>
+              <div class="recommend-body" *ngIf="highLighteditem === 3">
+                <label><strong>drinking</strong></label>,
+                <label class="selected"><strong>drinking</strong></label>,
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card" *ngIf="tone">
+          <div class="card-content sentimenatalbox">
+            <div class="row">
+              <div class="col-sm-6">
+                <h4>Call Sentiments</h4>
+                <figure><img src="../assets/img/pie-chart.jpg" alt=""/></figure>
+              </div>
+              <div class="col-sm-6" *ngIf="tone.length">
+                <h4>Emotional status</h4>
+                <figure>                  
+                  <div class="emotion-strip">
+                    <app-emotion-graph [emotionValue]="tone[0].score | round" [emotionText]="tone[0].tone_name"
+                                       [emotionColor]="'#a9baa7'"></app-emotion-graph>
+                  </div>
+                  <div class="emotion-strip">
+                    <app-emotion-graph [emotionValue]="tone[1].score | round" [emotionText]="tone[1].tone_name"
+                                       [emotionColor]="'#5ba7db'"></app-emotion-graph>
+                  </div>
+                  <div class="emotion-strip">
+                    <app-emotion-graph [emotionValue]="tone[2].score | round" [emotionText]="tone[2].tone_name"
+                                       [emotionColor]="'#b9a4cb'"></app-emotion-graph>
+                  </div>
+                  <div class="emotion-strip">
+                    <app-emotion-graph [emotionValue]="tone[3].score | round" [emotionText]="tone[3].tone_name"
+                                       [emotionColor]="'#f397a4'"></app-emotion-graph>
+                  </div>
+                  <div class="emotion-strip">
+                    <app-emotion-graph [emotionValue]="tone[4].score | round" [emotionText]="tone[4].tone_name"
+                                       [emotionColor]="'#ffd529'"></app-emotion-graph>
+                  </div>
+                </figure>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

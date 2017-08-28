@@ -1,0 +1,22 @@
+.emotion-text {
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+  text-overflow: ellipse;
+  white-space: nowrap;
+  padding-left: 5px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #383838;
+}
+
+.emotion-bar {
+  margin-top: 5px;
+}
+
+.emotion-value {
+  text-align: right;
+  font-weight: 600;
+  color: #383838;
+  font-size: 13px;
+}

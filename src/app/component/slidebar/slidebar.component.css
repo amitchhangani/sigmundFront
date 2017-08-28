@@ -1,0 +1,15 @@
+.bar-wrap{
+    position: relative;
+    background: #efefef;
+    height: 15px;
+    width: 100%;
+}
+
+.slide-bar{
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    transition: all 0.4s ease-in;
+}

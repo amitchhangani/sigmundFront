@@ -17,6 +17,7 @@ import { SocketService } from '../shared/socket/socket.service';
 export class SettingsComponent implements OnInit {
   recommendations: any[] = [];
   danger: any [] = [];
+  users: any [] = [];
   isAddEnable: boolean;
   isSaveEnable: boolean;
   isDangerSaveEnable: boolean;
@@ -45,6 +46,9 @@ export class SettingsComponent implements OnInit {
     this.getService(environment.baseUrl + 'recommendations/2').then(result => {
       console.log(result);
       this.danger = result.data;
+    }).catch(error => console.log(error));
+    this.getService(environment.baseUrl + 'user/fetchAll').then(result => {
+      this.users = result.data;
     }).catch(error => console.log(error));
   }
 

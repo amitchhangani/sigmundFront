@@ -21,6 +21,18 @@ export class SocketService {
       const tone = [{ 'type': 'tone', 'data': data }];
       this.eventCallback.next(tone);
     });
+    this.socket.on('recommendations', (data) => {
+      const tone = [{ 'type': 'recommendations', 'data': data }];
+      this.eventCallback.next(tone);
+    });
+    this.socket.on('danger', (data) => {
+      const tone = [{ 'type': 'danger', 'data': data }];
+      this.eventCallback.next(tone);
+    });
+    this.socket.on('sentiment', (data) => {
+      const tone = [{ 'type': 'sentiment', 'data': data }];
+      this.eventCallback.next(tone);
+    });
   }
 
   private initSocket(): void {

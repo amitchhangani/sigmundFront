@@ -1,9 +1,16 @@
 import { Declaration } from '@angular/compiler/src/i18n/serializers/xml_helper';
-import { Component, OnInit, Pipe, PipeTransform } from '@angular/core';
+import { Component, OnInit, Pipe, PipeTransform, Input } from '@angular/core';
 import { SocketService } from '../shared/socket/socket.service';
 import { environment } from '../../environments/environment';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { FileUploader } from 'ng2-file-upload';
+import {
+  trigger,
+  state,
+  style,
+  animate,
+  transition
+} from '@angular/animations';
 
 // @Pipe({ name: 'round' })
 // export class RoundPipe implements PipeTransform {
@@ -28,14 +35,25 @@ export class CallanalysisComponent implements OnInit {
   public hasAnotherDropZoneOver: boolean;
   message: any = [];
   tone: any = [];
+  recommendations : any = [];
+  danger : any = [];
+  sentiment : any = [];
+  cnt:Number=0;
 
   constructor(private socketService: SocketService, private http: Http) {
     this.socketService.eventCallback$.subscribe(value => {
+        
       if (value[0].type === 'chat') {
         this.message.push(value[0].data);
         this.uploader.progress=0;
       } else if (value[0].type === 'tone') {
         this.tone = value[0].data;
+      } else if (value[0].type === 'recommendations') {
+        this.recommendations = value[0].data;
+      } else if (value[0].type === 'danger') {
+        this.danger = value[0].data;
+      } else if (value[0].type === 'sentiment') {
+        this.sentiment = {transform: 'rotate('+(180-(value[0].data.document.score*180)-90)+'deg)'};
       }
     });
     this.headers = new Headers({

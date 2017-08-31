@@ -436,9 +436,12 @@ h5 {
     position: relative;
     border-radius: 5px;
     background: #f3f3f3;
-    padding: 10px 15px;
+    padding: 20px 15px;
     display: none;
     margin-bottom: 20px;
+}
+.recommend-body div{
+    margin-top:-10px;
 }
 
 .recommendation-box .recommend-body:before {
@@ -618,6 +621,39 @@ h5 {
     background-size: 600% 100%;
     -webkit-animation: HeroBG 20s ease infinite;
     animation: HeroBG 20s ease infinite;
+}
+
+.pie-chart-top{
+    position: relative;
+    display: inline-block;
+    padding-bottom: 20px;
+}
+
+.pie-chart-info{
+    font-size: 12px;
+    position: absolute;
+    left: 0;
+    width: 100%;
+    bottom: 0;
+}
+
+.pie-positive{
+    color: #4ec04e;
+}
+
+.pie-negative{
+    color: #eb4841
+}
+
+.pie-pin{
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin-top: 22px !important;
+    transition: all ease 1s 0s;
+    transform: rotate(90deg);
 }
 
 @-webkit-keyframes HeroBG {

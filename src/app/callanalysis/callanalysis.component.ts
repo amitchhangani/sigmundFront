@@ -3,7 +3,9 @@ import { Component, OnInit, Pipe, PipeTransform, Input } from '@angular/core';
 import { SocketService } from '../shared/socket/socket.service';
 import { environment } from '../../environments/environment';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
-import { FileUploader } from 'ng2-file-upload';
+import { FileUploader } from 'ng2-file-upload'; 
+import * as recognizeMicrophone from 'watson-speech/speech-to-text/recognize-microphone';
+//var recognizeMic = require('watson-speech/speech-to-text/recognize-microphone');
 import {
   trigger,
   state,
@@ -26,6 +28,7 @@ import {
   styleUrls: ['callanalysis.component.css']
 })
 export class CallanalysisComponent implements OnInit {
+  output: string = '#output'  
   headers: Headers;
   options: RequestOptions;
   fileOptions: RequestOptions;
@@ -39,6 +42,12 @@ export class CallanalysisComponent implements OnInit {
   danger : any = [];
   sentiment : any = [];
   cnt:Number=0;
+  stream: any;
+  token: string;
+  trs:string='';
+  showDivArr = [];
+  showSubItems = [];
+  itemsArray = [];
 
   constructor(private socketService: SocketService, private http: Http) {
     this.socketService.eventCallback$.subscribe(value => {
@@ -49,11 +58,17 @@ export class CallanalysisComponent implements OnInit {
       } else if (value[0].type === 'tone') {
         this.tone = value[0].data;
       } else if (value[0].type === 'recommendations') {
-        this.recommendations = value[0].data;
+        this.recommendations = value[0].data;        
+        this.showSubItems = value[0].data.map(i => false);
       } else if (value[0].type === 'danger') {
         this.danger = value[0].data;
       } else if (value[0].type === 'sentiment') {
-        this.sentiment = {transform: 'rotate('+(180-(value[0].data.document.score*180)-90)+'deg)'};
+        if(value[0].data.document.label=="negative"){
+          this.sentiment = {transform: 'rotate('+(-(value[0].data.document.score*90))+'deg)'};
+        }else{
+          this.sentiment = {transform: 'rotate('+(90-(value[0].data.document.score*90)-90)+'deg)'};
+        }
+        
       }
     });
     this.headers = new Headers({
@@ -68,6 +83,14 @@ export class CallanalysisComponent implements OnInit {
     this.fileOptions = new RequestOptions({ headers: this.fileHeaders });
     this.uploader = new FileUploader({ url: environment.baseUrl + 'transcriptions/upload' });
   }
+  
+  ngOnInit(){    
+    this.getService(environment.baseUrl + 'recommendations/getToken').then(result => {
+      this.token = result.token;
+    }).catch(error => console.log(error));
+  }
+
+  
 
   public chatTimeLine: any[] = [
     {
@@ -84,6 +107,71 @@ export class CallanalysisComponent implements OnInit {
   public btnCondition = true;
   public highLighteditem: number;
 
+  onEvent(name:string, event:any): void {
+    if(name=="Results:"){
+      //var result=;
+      if(event.results[event.results.length-1].final){
+        this.transcript=event.results[event.results.length-1].alternatives[0].transcript;
+      }
+    }
+    //console.log(result.speaker_labels);
+    if(name=="Speaker_Labels:"){
+      let speaker=event.speaker_labels[event.speaker_labels.length-1].speaker;
+      if(this.transcript!=this.oldTrans){
+        this.message.push({speaker:speaker,transcript:this.transcript});
+        if(speaker!=0){
+          this.trs+=" "+this.transcript;
+          this.postService(environment.baseUrl + 'transcriptions/fetchLiveRecordingData',{trs:this.trs,transcript:this.transcript}).then(result => {
+            
+          }).catch(error => console.log(error));
+        }
+        //process.emit('watson',{speaker,transcript})
+      }
+      //transcript="";
+      this.oldTrans=this.transcript;
+      speaker=0;
+    }
+  }
+
+  startMicRecording() {
+    if(!this.btnCondition){
+      this.message=[];
+      this.trs="";
+      this.stream = recognizeMicrophone({
+        token:this.token,       
+        speaker_labels: true,
+        objectMode: true
+      });
+
+      this.stream.on('error', function(err) {
+          console.log(err);
+      });
+
+      this.stream.on('data', (data) => {
+        if(data.results)
+          this.onEvent('Results:', data);
+        if(data.speaker_labels)
+          this.onEvent('Speaker_Labels:', data);
+      });
+
+    }else{
+      this.stream.stop();
+      //this.message=[];
+    }   
+  }
+  oldTrans:string = '';
+  transcript:string = '';
+
+  
+
+  getService(url: string): Promise<any> {
+    return this.http
+      .get(url, this.options)
+      .toPromise()
+      .then(this.extractData)
+      .catch(this.handleError);
+  }
+
   fileOverBase(e: any): void {
     this.hasBaseDropZoneOver = e;
   }
@@ -94,15 +182,12 @@ export class CallanalysisComponent implements OnInit {
 
   toggleBtnTxt() {
     this.btnCondition = !this.btnCondition;
-    this.recordStatus = this.btnCondition ? 'Start' : 'Stop';
-  }
-
-  ngOnInit() {
-    // $.getScript('../../../assets/js/material-dashboard.js');
+    this.recordStatus = this.btnCondition ? 'Start' : 'Stop';    
   }
 
   accordionTitleClick(targetVal) {
-    this.highLighteditem = targetVal;
+    //this.highLighteditem = targetVal;
+    this.showSubItems[targetVal] = !this.showSubItems[targetVal];
   }
 
   onChange() {

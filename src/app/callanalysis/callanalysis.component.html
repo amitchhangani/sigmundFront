@@ -7,7 +7,7 @@
           <div class="card-heading clearfix">
             <div class="card-heading-left">
               <div class="btn btn-danger" [ngClass]="{'btn-danger': btnCondition, 'btn-info': !btnCondition}"
-                      (click)="toggleBtnTxt()">
+                      (click)="toggleBtnTxt(); startMicRecording()">
                 <i *ngIf="btnCondition" class="icon material-icons">mic</i>
                 <i *ngIf="!btnCondition" class="material-icons">mic_off</i>
                 {{recordStatus}} Recording
@@ -58,13 +58,13 @@
               <app-heat-map [rangeValue]="danger"></app-heat-map>
             </figure>
             <h4 class="recommend-title">Recommendations:</h4>
-            <div *ngFor="let rec of recommendations" class="recommendation-box " [ngClass]="{'openbox': rec.tags.length}">
-              <div class="recommend-head" (click)="accordionTitleClick(0)" *ngIf="rec.tags">
+            <div *ngFor="let rec of recommendations; let k = index" class="recommendation-box " [ngClass]="{'openbox': rec.tags.length}">
+              <div class="recommend-head" (click)="accordionTitleClick(k)" *ngIf="rec.tags.length">
                 <div class="recommend-head-title"><span>{{rec.name}}</span></div>
                 <div class="recommend-repeat"><span>{{rec.count}} Times</span></div>
                 <div class="recommend-percent" *ngIf="rec.tags"><span>{{rec.percent}}%</span></div>
               </div>
-              <div class="recommend-body">
+              <div class="recommend-body" *ngIf="this.showSubItems[k]">
                 <div *ngFor="let tags of rec.tags; let i=index" style="float:left">
                   <span *ngIf="i>0">, </span><label  (click)="cnt=tags.count"><strong>{{tags.tag}}</strong> </label>
                 </div>

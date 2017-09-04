@@ -52,7 +52,12 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="col-sm-7 tag_cloud"><img src="../assets/img/tag_cloud.png" class="img-responsive"></div>
+                            <div class="col-sm-7 tag_cloud"><angular-tag-cloud
+        [data]="data"
+        [width]="options.width"
+        [height]="options.height"
+        [overflow]="options.overflow">
+      </angular-tag-cloud></div>
                         </div>
                     </md-tab>
                     <md-tab label="Personality">

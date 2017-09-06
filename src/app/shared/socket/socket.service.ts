@@ -13,7 +13,7 @@ export class SocketService {
 
   constructor() {
     this.initSocket();
-    this.socket.on('test', (data) => {
+    this.socket.on('transcript', (data) => {
       const msg = [{ 'type': 'chat', 'data': data }];
       this.eventCallback.next(msg);
     });

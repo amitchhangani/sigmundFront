@@ -52,8 +52,13 @@ export class CallanalysisComponent implements OnInit {
   constructor(private socketService: SocketService, private http: Http) {
     this.socketService.eventCallback$.subscribe(value => {
         
-      if (value[0].type === 'chat') {
-        this.message.push(value[0].data);
+      if (value[0].type === 'chat') {        
+        if( Object.prototype.toString.call( value[0].data ) === '[object Array]' ) {
+            this.message=[];
+            this.message=value[0].data;
+        }else{
+            this.message.push(value[0].data);
+        }
         this.uploader.progress=0;
       } else if (value[0].type === 'tone') {
         this.tone = value[0].data;
@@ -78,7 +83,6 @@ export class CallanalysisComponent implements OnInit {
     this.options = new RequestOptions({ headers: this.headers });
     this.fileHeaders = new Headers({
       'Content-Type': 'multipart/form-data'
-
     });
     this.fileOptions = new RequestOptions({ headers: this.fileHeaders });
     this.uploader = new FileUploader({ url: environment.baseUrl + 'transcriptions/upload' });
@@ -106,8 +110,32 @@ export class CallanalysisComponent implements OnInit {
   public recordStatus = 'Start';
   public btnCondition = true;
   public highLighteditem: number;
-
+  lastCnt: Number=0;
+  trans: any=[];
+  lastSp: Number=0;
+  lastIndex: Number=0
   onEvent(name:string, event:any): void {
+    if(event.speaker_labels && event.results){      
+      //console.log("Speakers Array:",result.speaker_labels.length);
+      //console.log("Transcript Array:",result.results[0].alternatives[0].timestamps.length);
+      if(event.speaker_labels.length==event.results[0].alternatives[0].timestamps.length && event.speaker_labels.length!=this.lastCnt){
+        this.lastCnt=event.speaker_labels.length;
+        //console.log("speakers",result.speaker_labels);
+        //console.log("results",result.results[0].alternatives[0].timestamps);
+
+        for(var i=0; i<event.speaker_labels.length; i++){
+          if(i==0 || event.speaker_labels[i].speaker!=this.lastSp){
+            this.trans.push({"speaker":event.speaker_labels[i].speaker, "transcript":event.results[0].alternatives[0].timestamps[i][0]});
+          }else{
+            this.trans[this.trans.length-1].transcript+=' '+event.results[0].alternatives[0].timestamps[i][0];              
+          }
+          this.lastSp=event.speaker_labels[i].speaker;
+          this.lastIndex=this.trans.length;
+        }
+        this.message=[];
+        this.message=this.trans;
+      }
+    }
     if(name=="Results:"){
       //var result=;
       if(event.results[event.results.length-1].final){
@@ -116,25 +144,29 @@ export class CallanalysisComponent implements OnInit {
     }
     //console.log(result.speaker_labels);
     if(name=="Speaker_Labels:"){
-      let speaker=event.speaker_labels[event.speaker_labels.length-1].speaker;
-      if(this.transcript!=this.oldTrans){
-        this.message.push({speaker:speaker,transcript:this.transcript});
-        if(speaker!=0){
-          this.trs+=" "+this.transcript;
-          this.postService(environment.baseUrl + 'transcriptions/fetchLiveRecordingData',{trs:this.trs,transcript:this.transcript}).then(result => {
-            
-          }).catch(error => console.log(error));
+      if(event.speaker_labels[event.speaker_labels.length-1]){
+        let speaker=event.speaker_labels[event.speaker_labels.length-1].speaker;
+        if(this.transcript!=this.oldTrans){
+          this.message.push({speaker:speaker,transcript:this.transcript});
+          if(speaker!=0){
+            this.trs+=" "+this.transcript;
+            this.postService(environment.baseUrl + 'transcriptions/fetchLiveRecordingData',{trs:this.trs,transcript:this.transcript}).then(result => {
+              
+            }).catch(error => console.log(error));
+          }
         }
-        //process.emit('watson',{speaker,transcript})
-      }
-      //transcript="";
-      this.oldTrans=this.transcript;
-      speaker=0;
+        this.oldTrans=this.transcript;
+        speaker=0;
+      }      
     }
   }
 
   startMicRecording() {
     if(!this.btnCondition){
+      this.lastCnt=0;
+      this.lastIndex=0;
+      this.lastSp=0;
+      this.trans=[];
       this.message=[];
       this.trs="";
       this.stream = recognizeMicrophone({

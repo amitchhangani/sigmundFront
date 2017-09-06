@@ -172,7 +172,8 @@ export class CallanalysisComponent implements OnInit {
       this.stream = recognizeMicrophone({
         token:this.token,       
         speaker_labels: true,
-        objectMode: true
+        objectMode: true,
+        inactivityTimeout:-1
       });
 
       this.stream.on('error', function(err) {

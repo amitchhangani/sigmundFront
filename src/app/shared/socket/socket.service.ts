@@ -36,7 +36,7 @@ export class SocketService {
   }
 
   private initSocket(): void {
-    this.socket = socketIo(environment.baseUrl);
+    this.socket = socketIo(environment.baseUrl, { query: 'token=' + localStorage.getItem('_token') + '' });
   }
 
   //

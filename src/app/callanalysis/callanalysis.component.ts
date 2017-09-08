@@ -86,7 +86,7 @@ export class CallanalysisComponent implements OnInit {
     });
     const tokenn = 'Bearer' + ' ' + localStorage.getItem('_token');
     this.fileOptions = new RequestOptions({ headers: this.fileHeaders });
-    this.uploader = new FileUploader({ url: environment.baseUrl + 'transcriptions/upload', authToken : tokenn });
+    this.uploader = new FileUploader({ url: environment.baseUrl + 'transcriptions/upload/'+localStorage.getItem('_token'), authToken : tokenn });
   }
 
   ngOnInit(){

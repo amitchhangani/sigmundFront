@@ -3,7 +3,7 @@ import { Component, OnInit, Pipe, PipeTransform, Input } from '@angular/core';
 import { SocketService } from '../shared/socket/socket.service';
 import { environment } from '../../environments/environment';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
-import { FileUploader } from 'ng2-file-upload'; 
+import { FileUploader } from 'ng2-file-upload';
 import * as recognizeMicrophone from 'watson-speech/speech-to-text/recognize-microphone';
 //var recognizeMic = require('watson-speech/speech-to-text/recognize-microphone');
 import {
@@ -28,73 +28,74 @@ import {
   styleUrls: ['callanalysis.component.css']
 })
 export class CallanalysisComponent implements OnInit {
-  output: string = '#output'  
+  output = '#output';
   headers: Headers;
   options: RequestOptions;
   fileOptions: RequestOptions;
   fileHeaders: Headers;
-  public uploader: FileUploader
+  public uploader: FileUploader;
   public hasBaseDropZoneOver: boolean;
   public hasAnotherDropZoneOver: boolean;
   message: any = [];
   tone: any = [];
-  recommendations : any = [];
-  danger : any = [];
-  sentiment : any = [];
-  cnt:Number=0;
+  recommendations: any = [];
+  danger: any = [];
+  sentiment: any = [];
+  cnt: Number= 0;
   stream: any;
   token: string;
-  trs:string='';
+  trs= '';
   showDivArr = [];
   showSubItems = [];
   itemsArray = [];
 
   constructor(private socketService: SocketService, private http: Http) {
     this.socketService.eventCallback$.subscribe(value => {
-        
-      if (value[0].type === 'chat') {        
-        if( Object.prototype.toString.call( value[0].data ) === '[object Array]' ) {
-            this.message=[];
-            this.message=value[0].data;
+
+      if (value[0].type === 'chat') {
+        if ( Object.prototype.toString.call( value[0].data ) === '[object Array]' ) {
+            this.message = [];
+            this.message = value[0].data;
         }else{
             this.message.push(value[0].data);
         }
-        this.uploader.progress=0;
+        this.uploader.progress = 0;
       } else if (value[0].type === 'tone') {
         this.tone = value[0].data;
       } else if (value[0].type === 'recommendations') {
-        this.recommendations = value[0].data;        
+        this.recommendations = value[0].data;
         this.showSubItems = value[0].data.map(i => false);
       } else if (value[0].type === 'danger') {
         this.danger = value[0].data;
       } else if (value[0].type === 'sentiment') {
-        if(value[0].data.document.label=="negative"){
-          this.sentiment = {transform: 'rotate('+(-(value[0].data.document.score*90))+'deg)'};
+        if (value[0].data.document.label == 'negative'){
+          this.sentiment = {transform: 'rotate(' + (-(value[0].data.document.score * 90)) + 'deg)'};
         }else{
-          this.sentiment = {transform: 'rotate('+(90-(value[0].data.document.score*90)-90)+'deg)'};
+          this.sentiment = {transform: 'rotate(' + (90 - (value[0].data.document.score * 90) - 90) + 'deg)'};
         }
-        
+
       }
     });
     this.headers = new Headers({
       'Content-Type': 'application/json',
-      'Accept': 'q=0.8;application/json;q=0.9'
+      'Accept': 'q=0.8;application/json;q=0.9',
     });
     this.options = new RequestOptions({ headers: this.headers });
     this.fileHeaders = new Headers({
       'Content-Type': 'multipart/form-data'
     });
+    const tokenn = 'Bearer' + ' ' + localStorage.getItem('_token');
     this.fileOptions = new RequestOptions({ headers: this.fileHeaders });
-    this.uploader = new FileUploader({ url: environment.baseUrl + 'transcriptions/upload' });
+    this.uploader = new FileUploader({ url: environment.baseUrl + 'transcriptions/upload', authToken : tokenn });
   }
-  
-  ngOnInit(){    
+
+  ngOnInit(){
     this.getService(environment.baseUrl + 'recommendations/getToken').then(result => {
       this.token = result.token;
     }).catch(error => console.log(error));
   }
 
-  
+
 
   public chatTimeLine: any[] = [
     {
@@ -110,70 +111,70 @@ export class CallanalysisComponent implements OnInit {
   public recordStatus = 'Start';
   public btnCondition = true;
   public highLighteditem: number;
-  lastCnt: Number=0;
-  trans: any=[];
-  lastSp: Number=0;
-  lastIndex: Number=0
-  onEvent(name:string, event:any): void {
-    if(event.speaker_labels && event.results){      
+  lastCnt: Number= 0;
+  trans: any= [];
+  lastSp: Number= 0;
+  lastIndex: Number= 0;
+  onEvent(name: string, event: any): void {
+    if (event.speaker_labels && event.results){
       //console.log("Speakers Array:",result.speaker_labels.length);
       //console.log("Transcript Array:",result.results[0].alternatives[0].timestamps.length);
-      if(event.speaker_labels.length==event.results[0].alternatives[0].timestamps.length && event.speaker_labels.length!=this.lastCnt){
-        this.lastCnt=event.speaker_labels.length;
+      if (event.speaker_labels.length == event.results[0].alternatives[0].timestamps.length && event.speaker_labels.length != this.lastCnt){
+        this.lastCnt = event.speaker_labels.length;
         //console.log("speakers",result.speaker_labels);
         //console.log("results",result.results[0].alternatives[0].timestamps);
 
-        for(var i=0; i<event.speaker_labels.length; i++){
-          if(i==0 || event.speaker_labels[i].speaker!=this.lastSp){
-            this.trans.push({"speaker":event.speaker_labels[i].speaker, "transcript":event.results[0].alternatives[0].timestamps[i][0]});
+        for (let i = 0; i < event.speaker_labels.length; i++){
+          if (i == 0 || event.speaker_labels[i].speaker != this.lastSp){
+            this.trans.push({'speaker': event.speaker_labels[i].speaker, 'transcript': event.results[0].alternatives[0].timestamps[i][0]});
           }else{
-            this.trans[this.trans.length-1].transcript+=' '+event.results[0].alternatives[0].timestamps[i][0];              
+            this.trans[this.trans.length - 1].transcript += ' ' + event.results[0].alternatives[0].timestamps[i][0];
           }
-          this.lastSp=event.speaker_labels[i].speaker;
-          this.lastIndex=this.trans.length;
+          this.lastSp = event.speaker_labels[i].speaker;
+          this.lastIndex = this.trans.length;
         }
-        this.message=[];
-        this.message=this.trans;
+        this.message = [];
+        this.message = this.trans;
       }
     }
-    if(name=="Results:"){
+    if (name == 'Results:'){
       //var result=;
-      if(event.results[event.results.length-1].final){
-        this.transcript=event.results[event.results.length-1].alternatives[0].transcript;
+      if (event.results[event.results.length - 1].final){
+        this.transcript = event.results[event.results.length - 1].alternatives[0].transcript;
       }
     }
     //console.log(result.speaker_labels);
-    if(name=="Speaker_Labels:"){
-      if(event.speaker_labels[event.speaker_labels.length-1]){
-        let speaker=event.speaker_labels[event.speaker_labels.length-1].speaker;
-        if(this.transcript!=this.oldTrans){
-          this.message.push({speaker:speaker,transcript:this.transcript});
-          if(speaker!=0){
-            this.trs+=" "+this.transcript;
-            this.postService(environment.baseUrl + 'transcriptions/fetchLiveRecordingData',{trs:this.trs,transcript:this.transcript}).then(result => {
-              
+    if (name == 'Speaker_Labels:'){
+      if (event.speaker_labels[event.speaker_labels.length - 1]){
+        let speaker = event.speaker_labels[event.speaker_labels.length - 1].speaker;
+        if (this.transcript != this.oldTrans){
+          this.message.push({speaker: speaker, transcript: this.transcript});
+          if (speaker != 0){
+            this.trs += ' ' + this.transcript;
+            this.postService(environment.baseUrl + 'transcriptions/fetchLiveRecordingData', {trs: this.trs, transcript: this.transcript}).then(result => {
+
             }).catch(error => console.log(error));
           }
         }
-        this.oldTrans=this.transcript;
-        speaker=0;
-      }      
+        this.oldTrans = this.transcript;
+        speaker = 0;
+      }
     }
   }
 
   startMicRecording() {
-    if(!this.btnCondition){
-      this.lastCnt=0;
-      this.lastIndex=0;
-      this.lastSp=0;
-      this.trans=[];
-      this.message=[];
-      this.trs="";
+    if (!this.btnCondition){
+      this.lastCnt = 0;
+      this.lastIndex = 0;
+      this.lastSp = 0;
+      this.trans = [];
+      this.message = [];
+      this.trs = '';
       this.stream = recognizeMicrophone({
-        token:this.token,       
+        token: this.token,
         speaker_labels: true,
         objectMode: true,
-        inactivityTimeout:-1
+        inactivityTimeout: -1
       });
 
       this.stream.on('error', function(err) {
@@ -181,21 +182,21 @@ export class CallanalysisComponent implements OnInit {
       });
 
       this.stream.on('data', (data) => {
-        if(data.results)
+        if (data.results)
           this.onEvent('Results:', data);
-        if(data.speaker_labels)
+        if (data.speaker_labels)
           this.onEvent('Speaker_Labels:', data);
       });
 
     }else{
       this.stream.stop();
       //this.message=[];
-    }   
+    }
   }
-  oldTrans:string = '';
-  transcript:string = '';
+  oldTrans = '';
+  transcript = '';
 
-  
+
 
   getService(url: string): Promise<any> {
     return this.http
@@ -215,7 +216,7 @@ export class CallanalysisComponent implements OnInit {
 
   toggleBtnTxt() {
     this.btnCondition = !this.btnCondition;
-    this.recordStatus = this.btnCondition ? 'Start' : 'Stop';    
+    this.recordStatus = this.btnCondition ? 'Start' : 'Stop';
   }
 
   accordionTitleClick(targetVal) {
@@ -224,10 +225,10 @@ export class CallanalysisComponent implements OnInit {
   }
 
   onChange() {
-    this.uploader.progress=0;
-    this.uploader.uploadAll();    
+    this.uploader.progress = 0;
+    this.uploader.uploadAll();
     this.tone = [];
-    this.message = [];    
+    this.message = [];
 
     // debugger;
     // console.log('onChange');
@@ -248,7 +249,7 @@ export class CallanalysisComponent implements OnInit {
       .catch(this.handleError);
   }
 
-  uploadService(url: string, payload: any): Promise<any> {    
+  uploadService(url: string, payload: any): Promise<any> {
     return this.http
       .post(url, payload, this.fileOptions)
       .toPromise()
@@ -257,7 +258,7 @@ export class CallanalysisComponent implements OnInit {
   }
 
   private extractData(res: Response) {
-    
+
     const body = res.json();
     return body || {};
   }

@@ -2,3 +2,15 @@
 	max-height: 475px;
 	overflow: auto;
 }
+
+.user-info {
+    font-size: 14px;
+    color: #444;
+    margin: 2px 0 0 8px;
+}
+.user-info strong {
+    text-transform: uppercase;
+    color: #222;
+	width: 120px;
+	margin: 0 6px 0 0;
+}

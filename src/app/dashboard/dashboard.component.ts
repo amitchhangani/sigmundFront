@@ -50,7 +50,14 @@ export class DashboardComponent implements OnInit {
     .then(result => {
       this.patient_transcription = result.data;
     })
-    .catch(error => console.log(error));
+    .catch(error => this.patient_transcription = '');
+  }
+
+  call(patient: any) {
+    localStorage.setItem('patient_id', patient._id);
+    localStorage.setItem('patient_name_for_chat', patient.name);
+    localStorage.setItem('patient_email_for_chat', patient.email);
+    this.router.navigate(['/call-anylsis']);
   }
   // delete(id: any) {
   //   this.headers = new Headers({

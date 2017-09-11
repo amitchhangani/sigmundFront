@@ -5,8 +5,7 @@
         <div class="card">
             <div class="card-header" data-background-color="orange">
                 <h4 class="title">Patients Stats</h4>
-                <em style="color: red;">{{patient_error}}</em>
-            </div>
+                <em style="color: red;">{{patient_error}}</em>            </div>
             <div class="card-content table-responsive">
                 <div class="mt-2">
                     <button class="btn btn-info" (click)="this.router.navigate(['/patient_add'])">
@@ -20,6 +19,7 @@
                             <th>ID</th>
                             <th>Name</th>
                             <th>Email</th>
+                            <th>Call</th>
                             <th>Action</th>
                             <th>Selected Patient</th>
                         </tr>
@@ -27,19 +27,26 @@
                     <tbody>
                         <tr *ngFor="let p of patient; let k = index">
                             <!-- <td>{{p._id}}</td> -->
-                            <td>{{k+1}}</td>
+                            <td>{{k}}</td>
                             <td>{{p.name}}</td>
                             <td>{{p.email}}</td>
+                            <td>                                            
+                                <div class="mt-2">
+                                    <button class="btn btn-info" (click)="call(p)">
+                                    Call
+                                    </button>
+                                </div>
+                                </td>
                             <td class="td-actions text-right">
-                              <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-simple btn-xs">
-                                <i class="material-icons" (click)="edit(p._id)">edit</i>
+                              <button type="button" rel="tooltip" title="Edit Task"  (click)="edit(p._id)" class="btn btn-primary btn-simple btn-xs">
+                                <i class="material-icons">edit</i>
                               </button>
-                              <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-simple btn-xs">
-                                <i class="material-icons" (click)="delete(p._id)">close</i>
+                              <button type="button" rel="tooltip" title="Remove"  (click)="delete(p._id)" class="btn btn-danger btn-simple btn-xs">
+                                <i class="material-icons">close</i>
                               </button>
                           </td>
                           <td>
-                              <md-radio-button value="1" rel="tooltip" [checked]="p._id === pat_id" title="Select Patient" (click)="select(p._id)"></md-radio-button>
+                              <md-radio-button value="1" rel="tooltip" [checked]="p._id === pat_id" title="Select Patient" (click)="select(p)"></md-radio-button>
                           </td>
                         </tr>
                     </tbody>

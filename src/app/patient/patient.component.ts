@@ -29,6 +29,7 @@ export class PatientComponent implements OnInit {
   constructor(private http: Http, private router: Router) {
   }
   ngOnInit() {
+    console.log("this is patient",localStorage.getItem(''))
     if (localStorage.getItem('patient_id')) {
       this.pat_id = localStorage.getItem('patient_id');
     }else {
@@ -70,10 +71,19 @@ export class PatientComponent implements OnInit {
     this.router.navigate(['/patient_update']);
   }
 
-  select(id: any) {
-    // to get id of selected patient
-    localStorage.setItem('patient_id', id);
+  call(patient: any ) {
+    localStorage.setItem('patient_id', patient._id);
     this.pat_id = localStorage.getItem('patient_id');
+    localStorage.setItem('patient_name_for_chat', patient.name);
+    localStorage.setItem('patient_email_for_chat', patient.email);
+    this.router.navigate(['/call-anylsis']);
+  }
+  select(patient_t) {
+    // to get id of selected patient
+    localStorage.setItem('patient_id', patient_t._id);
+    this.pat_id = localStorage.getItem('patient_id');
+    localStorage.setItem('patient_name_for_chat', patient_t.name);
+    localStorage.setItem('patient_email_for_chat', patient_t.email);
     this.patient_error = '';
   }
 

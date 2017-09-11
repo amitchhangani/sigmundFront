@@ -49,7 +49,8 @@ export class CallanalysisComponent implements OnInit {
   showDivArr = [];
   showSubItems = [];
   itemsArray = [];
-
+  patient_name;
+  patient_email;
   constructor(private socketService: SocketService, private http: Http, private router: Router) {
     this.socketService.eventCallback$.subscribe(value => {
 
@@ -98,6 +99,11 @@ export class CallanalysisComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    this.patient_name = localStorage.getItem('patient_name_for_chat');
+    this.patient_email = localStorage.getItem('patient_email_for_chat');
+    console.log("asdf",this.patient_name);
+    console.log("asdf",this.patient_email);
     if (localStorage.getItem('patient_id')) {
        this.getService(environment.baseUrl + 'recommendations/getToken').then(result => {
           this.token = result.token;

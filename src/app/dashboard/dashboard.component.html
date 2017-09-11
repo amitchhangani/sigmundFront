@@ -4,7 +4,7 @@
                 <div class="card">
                     <div class="card-header" data-background-color="orange">
                         <h4 class="title">Patients Stats</h4>
-                        <em style="color: red;">{{patient_error}}</em>
+                        <em style="color: white;">{{patient_error}}</em>
                     </div>
                     <div class="card-content table-responsive">
                         <table class="table table-hover">
@@ -13,6 +13,7 @@
                                     <th>ID</th>
                                     <th>Name</th>
                                     <th>Email</th>
+                                    <th>Call</th>
                                     <th>Show Transcript </th>
                                 </tr>
                             </thead>
@@ -22,6 +23,13 @@
                                     <td>{{k+1}}</td>
                                     <td>{{p.name}}</td>
                                     <td>{{p.email}}</td>
+                                    <td>                                            
+                                        <div class="mt-2">
+                                            <button class="btn btn-info" (click)="call(p)">
+                                            Call
+                                            </button>
+                                        </div>
+                                    </td>
                                     <td>
                                         
                                         <div class="mt-2">
@@ -37,20 +45,17 @@
                 </div>
             </div>
 
-    <div class="container-fluid">
+    <div class="container-fluid" *ngIf="patient_transcription">
         <div class="row">
             <div class="col-lg-6 col-md-12">
                 <div class="card card-nav-tabs">
                     <div class="card-header" data-background-color="purple">
                         <div class="nav-tabs-navigation">
                             <div class="nav-tabs-wrapper">
-                                <span class="nav-tabs-title">Tasks:</span>
+                                <span class="nav-tabs-title"><h4>Transcript</h4></span>
                                 <ul class="nav nav-tabs" data-tabs="tabs">
-                                    <li class="active">
-                                        <a href="#profile" data-toggle="tab">
-                                            <i class="material-icons">bug_report</i> Transcript
-                                            <div class="ripple-container"></div>
-                                        </a>
+                                    <li>
+                                        
                                     </li>
                                 </ul>
                             </div>

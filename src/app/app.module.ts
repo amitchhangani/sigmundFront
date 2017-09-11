@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { TagInputModule } from 'ngx-chips';
 import { TagCloudModule } from 'angular-tag-cloud-module';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
@@ -60,6 +61,9 @@ import { RouteGuard } from './shared/route-guards/route.guard';
 import { SocketService } from './shared/socket/socket.service';
 import { FileDropDirective, FileSelectDirective } from 'ng2-file-upload';
 import { RoundPipe } from './callanalysis/round-Pipe';
+import { PatientComponent } from './patient/patient.component';
+import { PatientAddComponent } from './patient/patient-add.component';
+import { PatientUpdateComponent } from './patient/patient-update.component';
 
 @NgModule({
   declarations: [
@@ -78,7 +82,7 @@ import { RoundPipe } from './callanalysis/round-Pipe';
     SlidebarComponent,
     ReportComponent,
     ChatLineComponent,
-    FileDropDirective, FileSelectDirective, RoundPipe
+    FileDropDirective, FileSelectDirective, RoundPipe, PatientComponent, PatientAddComponent, PatientUpdateComponent
   ],
   imports: [
     BrowserModule,
@@ -120,7 +124,8 @@ import { RoundPipe } from './callanalysis/round-Pipe';
     CdkTableModule,
     TagInputModule,
     TagCloudModule,
-    HttpModule
+    HttpModule,
+    NgbModule.forRoot()
   ],
   providers: [RouteGuard, SocketService],
   bootstrap: [AppComponent],

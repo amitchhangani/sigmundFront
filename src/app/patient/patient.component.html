@@ -1,0 +1,54 @@
+<div class="main-content">  
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-12 col-md-12">
+        <div class="card">
+            <div class="card-header" data-background-color="orange">
+                <h4 class="title">Patients Stats</h4>
+                <em style="color: red;">{{patient_error}}</em>
+            </div>
+            <div class="card-content table-responsive">
+                <div class="mt-2">
+                    <button class="btn btn-info" (click)="this.router.navigate(['/patient_add'])">
+                    <i class="material-icons">add_circle_outline</i>
+                    ADD PATIENT
+                    </button>
+                    </div>
+                <table class="table table-hover">
+                    <thead class="text-warning">
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Action</th>
+                            <th>Selected Patient</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let p of patient; let k = index">
+                            <!-- <td>{{p._id}}</td> -->
+                            <td>{{k+1}}</td>
+                            <td>{{p.name}}</td>
+                            <td>{{p.email}}</td>
+                            <td class="td-actions text-right">
+                              <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-simple btn-xs">
+                                <i class="material-icons" (click)="edit(p._id)">edit</i>
+                              </button>
+                              <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-simple btn-xs">
+                                <i class="material-icons" (click)="delete(p._id)">close</i>
+                              </button>
+                          </td>
+                          <td>
+                              <md-radio-button value="1" rel="tooltip" [checked]="p._id === pat_id" title="Select Patient" (click)="select(p._id)"></md-radio-button>
+                          </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

@@ -1,0 +1,97 @@
+import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Validators, FormGroup, FormBuilder } from '@angular/forms';
+import { environment } from '../../environments/environment';
+import { Http, Response } from '@angular/http';
+@Component({
+  selector: 'app-patient-add',
+  template: `
+      <div class="login login-wrap">
+      <div class="container">
+        <div class="register-wrap">
+          <div class="panel panel-login">
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-lg-12">
+                  <form  [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
+                    <h1 class="login-heading"><img src="../assets/img/logo.png" alt="logo" width="250"></h1>
+                    <h2><span style=" cursor:pointer; ">Update Patient</span></h2>
+
+                    <md-input-container class="full-width">
+                      <input mdInput [(ngModel)]="patient.name" formControlName="name" required placeholder="Name" [name]="true" />
+                      <md-error>This field is required</md-error>
+                    </md-input-container>
+                    <br>
+                    <md-input-container class="full-width">
+              <input mdInput [(ngModel)]="patient.email" required formControlName="email" placeholder="Email" type="text" [email]="true"/>
+                      <md-error>This field is required</md-error>
+                    </md-input-container>
+                    <div class="row">
+                      <div class="col-sm-6 form-group text-right">
+                        <button class="btn btn-danger btn-login" type='submit'>Update</button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  `,
+})
+export class PatientUpdateComponent implements OnInit {
+  patient = { result: { name: '', email: '' } };
+  patient_id: any;
+  public form: FormGroup;
+  returnUrl: string;
+  loginError: string;
+
+  constructor(
+    private builder: FormBuilder,
+    private router: Router,
+    private route: ActivatedRoute,
+    private http: Http
+  ) {
+    this.form = this.builder.group({
+      email: ['', Validators.required],
+      name: ['', Validators.required]
+    });
+   }
+
+  ngOnInit() {
+    this.patient_id = localStorage.getItem('patient_id_for_updation');
+    this.loginError = null;
+    this.http.get(environment.baseUrl + 'patient/get' + '/' + this.patient_id)
+      .map((response: Response) => {
+        return response = response.json();
+      })
+      .subscribe(
+        data => {
+          this.patient = data.data;
+        },
+        error => {
+          console.log(error);
+          this.loginError = 'Authentication failed';
+        }
+      );
+  }
+  onSubmit(patient: any ) {
+    this.loginError = null;
+    this.http.put(environment.baseUrl + 'patient/update' + '/' + this.patient_id , { email: patient.email, name: patient.name } )
+      .map((response: Response) => {
+        return response = response.json();
+      })
+      .subscribe(
+        data => {
+          return this.router.navigate(['/patient']);
+        },
+        error => {
+          console.log(error);
+          this.loginError = 'Authentication failed';
+        }
+      );
+      }
+}

@@ -8,6 +8,9 @@ import {DashboardComponent} from './dashboard/dashboard.component';
 import {SettingsComponent} from './settings/settings.component';
 import { CallanalysisComponent } from './callanalysis/callanalysis.component';
 import { ReportComponent } from './report/report.component';
+import { PatientComponent} from './../app/patient/patient.component';
+import { PatientUpdateComponent} from './../app/patient/patient-update.component';
+import { PatientAddComponent} from './../app/patient/patient-add.component';
 
 export const homeRoutes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -15,6 +18,9 @@ export const homeRoutes: Routes = [
   { path: 'setting', component: SettingsComponent },
   { path: 'call-anylsis', component: CallanalysisComponent },
   { path: 'report', component: ReportComponent },
+  { path: 'patient', component: PatientComponent },
+  { path: 'patient_add', component: PatientAddComponent },
+  { path: 'patient_update', component: PatientUpdateComponent }
 
   // { path: 'dashboard', component: DashboardComponent, children: dashboardRoutes, canActivate: [DashboardRouteGuard] },
   // {

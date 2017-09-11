@@ -4,6 +4,7 @@ import { SocketService } from '../shared/socket/socket.service';
 import { environment } from '../../environments/environment';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { FileUploader } from 'ng2-file-upload';
+import { Router } from '@angular/router';
 import * as recognizeMicrophone from 'watson-speech/speech-to-text/recognize-microphone';
 //var recognizeMic = require('watson-speech/speech-to-text/recognize-microphone');
 import {
@@ -49,7 +50,7 @@ export class CallanalysisComponent implements OnInit {
   showSubItems = [];
   itemsArray = [];
 
-  constructor(private socketService: SocketService, private http: Http) {
+  constructor(private socketService: SocketService, private http: Http, private router: Router) {
     this.socketService.eventCallback$.subscribe(value => {
 
       if (value[0].type === 'chat') {
@@ -85,14 +86,25 @@ export class CallanalysisComponent implements OnInit {
       'Content-Type': 'multipart/form-data'
     });
     const tokenn = 'Bearer' + ' ' + localStorage.getItem('_token');
+    const patient_id = localStorage.getItem('patient_id');
     this.fileOptions = new RequestOptions({ headers: this.fileHeaders });
-    this.uploader = new FileUploader({ url: environment.baseUrl + 'transcriptions/upload/'+localStorage.getItem('_token'), authToken : tokenn });
+    this.uploader = new FileUploader(
+      { url: environment.baseUrl + 'transcriptions/upload/' + localStorage.getItem('_token'),
+      authToken : tokenn
+    });
+    this.uploader.options.additionalParameter = {
+      patient_id: patient_id
+    };
   }
 
-  ngOnInit(){
-    this.getService(environment.baseUrl + 'recommendations/getToken').then(result => {
-      this.token = result.token;
-    }).catch(error => console.log(error));
+  ngOnInit() {
+    if (localStorage.getItem('patient_id')) {
+       this.getService(environment.baseUrl + 'recommendations/getToken').then(result => {
+          this.token = result.token;
+        }).catch(error => console.log(error));
+    }else {
+      this.router.navigate(['/patient']);
+    }
   }
 
 

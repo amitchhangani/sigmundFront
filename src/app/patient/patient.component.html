@@ -31,11 +31,11 @@
                             <td>{{p.name}}</td>
                             <td>{{p.email}}</td>
                             <td class="td-actions text-right">
-                              <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-simple btn-xs">
-                                <i class="material-icons" (click)="edit(p._id)">edit</i>
+                              <button type="button" rel="tooltip" title="Edit Task" (click)="edit(p._id)" class="btn btn-primary btn-simple btn-xs">
+                                <i class="material-icons">edit</i>
                               </button>
-                              <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-simple btn-xs">
-                                <i class="material-icons" (click)="delete(p._id)">close</i>
+                              <button type="button" rel="tooltip" title="Remove" (click)="delete(p._id)" class="btn btn-danger btn-simple btn-xs">
+                                <i class="material-icons">close</i>
                               </button>
                           </td>
                           <td>

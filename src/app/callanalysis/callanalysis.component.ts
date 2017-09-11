@@ -133,52 +133,38 @@ export class CallanalysisComponent implements OnInit {
   trans: any= [];
   lastSp: Number= 0;
   lastIndex: Number= 0;
+  abc: number =0;
+  results: any=[];
+  
   onEvent(name: string, event: any): void {
-    if (event.speaker_labels && event.results){
-      //console.log("Speakers Array:",result.speaker_labels.length);
-      //console.log("Transcript Array:",result.results[0].alternatives[0].timestamps.length);
-      if (event.speaker_labels.length == event.results[0].alternatives[0].timestamps.length && event.speaker_labels.length != this.lastCnt){
-        this.lastCnt = event.speaker_labels.length;
-        //console.log("speakers",result.speaker_labels);
-        //console.log("results",result.results[0].alternatives[0].timestamps);
-
+    let translation: any=[];    
+    this.abc+=1;
+    if(typeof (event.results)!= 'undefined'){
+      this.results=event.results;
+    }
+    if (event.speaker_labels){
+      if (event.speaker_labels.length == this.results[0].alternatives[0].timestamps.length && event.speaker_labels.length != this.lastCnt){
         for (let i = 0; i < event.speaker_labels.length; i++){
-          if (i == 0 || event.speaker_labels[i].speaker != this.lastSp){
-            this.trans.push({'speaker': event.speaker_labels[i].speaker, 'transcript': event.results[0].alternatives[0].timestamps[i][0]});
+          for(let j =0; j < this.results[0].alternatives[0].timestamps.length; j++){
+            if(this.results[0].alternatives[0].timestamps[j][1]==event.speaker_labels[i].from){
+              this.trans.push({'speaker':event.speaker_labels[i].speaker, 'transcript':this.results[0].alternatives[0].timestamps[i][0]});        
+            }
+          }          
+        }
+        for(var i=0; i< this.trans.length; i++){
+          if(translation.length==0 || this.lastSp!=this.trans[i].speaker){
+            translation.push({"speaker":this.trans[i].speaker,"transcript":this.trans[i].transcript})
           }else{
-            this.trans[this.trans.length - 1].transcript += ' ' + event.results[0].alternatives[0].timestamps[i][0];
+            translation[translation.length-1].transcript+=" "+this.trans[i].transcript;
           }
-          this.lastSp = event.speaker_labels[i].speaker;
-          this.lastIndex = this.trans.length;
+          this.lastSp=this.trans[i].speaker;
         }
         this.message = [];
-        this.message = this.trans;
+        this.message = translation;
       }
-    }
-    if (name == 'Results:'){
-      //var result=;
-      if (event.results[event.results.length - 1].final){
-        this.transcript = event.results[event.results.length - 1].alternatives[0].transcript;
-      }
-    }
-    //console.log(result.speaker_labels);
-    if (name == 'Speaker_Labels:'){
-      if (event.speaker_labels[event.speaker_labels.length - 1]){
-        let speaker = event.speaker_labels[event.speaker_labels.length - 1].speaker;
-        if (this.transcript != this.oldTrans){
-          this.message.push({speaker: speaker, transcript: this.transcript});
-          if (speaker != 0){
-            this.trs += ' ' + this.transcript;
-            this.postService(environment.baseUrl + 'transcriptions/fetchLiveRecordingData', {trs: this.trs, transcript: this.transcript}).then(result => {
-
-            }).catch(error => console.log(error));
-          }
-        }
-        this.oldTrans = this.transcript;
-        speaker = 0;
-      }
-    }
+    }    
   }
+  
 
   startMicRecording() {
     if (!this.btnCondition){

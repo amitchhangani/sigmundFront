@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  baseUrl: 'https://stagingsdei.com:4101/'
+  baseUrl: 'http://localhost:4101/'
 };

@@ -162,7 +162,31 @@ export class CallanalysisComponent implements OnInit {
         this.message = [];
         this.message = translation;
       }
-    }    
+    }
+
+    if (name == 'Results:'){
+      if (event.results[event.results.length - 1].final){
+        this.transcript = event.results[event.results.length - 1].alternatives[0].transcript;
+      }
+    }
+    //console.log(result.speaker_labels);
+    if (name == 'Speaker_Labels:'){
+      if (event.speaker_labels[event.speaker_labels.length - 1]){
+        let speaker = event.speaker_labels[event.speaker_labels.length - 1].speaker;
+        if (this.transcript != this.oldTrans){
+          //this.message.push({speaker: speaker, transcript: this.transcript});
+          if (speaker != 0){
+            this.trs += ' ' + this.transcript;
+            this.postService(environment.baseUrl + 'transcriptions/fetchLiveRecordingData/'+localStorage.getItem('_token'), {trs: this.trs, transcript: this.transcript}).then(result => {
+
+            }).catch(error => console.log(error));
+          }
+        }
+        this.oldTrans = this.transcript;
+        speaker = 0;
+      }
+    }
+
   }
   
 

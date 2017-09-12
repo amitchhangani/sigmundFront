@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import 'rxjs/add/operator/startWith';
 import 'rxjs/add/observable/merge';
@@ -26,7 +27,7 @@ export class SettingsComponent implements OnInit {
   options: RequestOptions;
   baseUrl: string;
 
-  constructor(private http: Http, private socketService: SocketService) {
+  constructor(private http: Http, private socketService: SocketService, private router: Router) {
     this.headers = new Headers({
       'Content-Type': 'application/json',
       'Accept': 'q=0.8;application/json;q=0.9'
@@ -76,6 +77,11 @@ export class SettingsComponent implements OnInit {
   private handleError(error: any): Promise<any> {
     console.error('An error occurred', error);
     return Promise.reject(error.message || error);
+  }
+
+  showRec = (user_id: any) => {
+    localStorage.setItem('userid_for_patientlist', user_id);
+    this.router.navigate(['/user_patient']);
   }
 
   saveRecommendations(template, index) {

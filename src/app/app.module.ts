@@ -64,6 +64,7 @@ import { RoundPipe } from './callanalysis/round-Pipe';
 import { PatientComponent } from './patient/patient.component';
 import { PatientAddComponent } from './patient/patient-add.component';
 import { PatientUpdateComponent } from './patient/patient-update.component';
+import { UserPatientComponent } from './user-patient/user-patient.component';
 
 @NgModule({
   declarations: [
@@ -82,7 +83,7 @@ import { PatientUpdateComponent } from './patient/patient-update.component';
     SlidebarComponent,
     ReportComponent,
     ChatLineComponent,
-    FileDropDirective, FileSelectDirective, RoundPipe, PatientComponent, PatientAddComponent, PatientUpdateComponent
+    FileDropDirective, FileSelectDirective, RoundPipe, PatientComponent, PatientAddComponent, PatientUpdateComponent, UserPatientComponent
   ],
   imports: [
     BrowserModule,

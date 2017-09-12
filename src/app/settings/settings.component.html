@@ -134,7 +134,7 @@
                     </button>
                   </div>
                 </md-tab>
-                <md-tab label="Users">
+                <md-tab label="Patient">
                   <table class="table">
                     <thead>
                     <tr>
@@ -151,8 +151,8 @@
                       <td>
                         {{user.email}}
                       </td>
-                      <td>
-                        Show Recordings
+                      <td (click)="showRec(user._id)">
+                        <button>Show Recordings</button>
                       </td>
                     </tr>
                     </tbody>

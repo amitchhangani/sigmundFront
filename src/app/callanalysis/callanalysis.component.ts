@@ -102,8 +102,6 @@ export class CallanalysisComponent implements OnInit {
 
     this.patient_name = localStorage.getItem('patient_name_for_chat');
     this.patient_email = localStorage.getItem('patient_email_for_chat');
-    console.log("asdf",this.patient_name);
-    console.log("asdf",this.patient_email);
     if (localStorage.getItem('patient_id')) {
        this.getService(environment.baseUrl + 'recommendations/getToken').then(result => {
           this.token = result.token;
@@ -178,6 +176,7 @@ export class CallanalysisComponent implements OnInit {
           if (speaker != 0){
             this.trs += ' ' + this.transcript;
             this.postService(environment.baseUrl + 'transcriptions/fetchLiveRecordingData/'+localStorage.getItem('_token'), {trs: this.trs, transcript: this.transcript}).then(result => {
+
 
             }).catch(error => console.log(error));
           }

@@ -1,0 +1,81 @@
+<div class="main-content">
+  
+          <div class="col-lg-6 col-md-12">
+                  <div class="card">
+                      <div class="card-header" data-background-color="orange">
+                          <h4 class="title">Patients Stats</h4>
+                          <em style="color: red;">{{patient_error}}</em>
+                      </div>
+                      <div class="card-content table-responsive">
+                          <table class="table table-hover">
+                              <thead class="text-warning">
+                                  <tr>
+                                      <th>ID</th>
+                                      <th>Name</th>
+                                      <th>Email</th>
+                                      <th>Call</th>
+                                      <th>Show Transcript </th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                  <tr *ngFor="let p of patient; let k = index">
+                                      <!-- <td>{{p._id}}</td> -->
+                                      <td>{{k+1}}</td>
+                                      <td>{{p.patient_id.name}}</td>
+                                      <td>{{p.patient_id.email}}</td>
+                                      <td>                                            
+                                          <div class="mt-2">
+                                              <button class="btn btn-info" (click)="call(p.patient_id)">
+                                              Call
+                                              </button>
+                                          </div>
+                                      </td>
+                                      <td>                                        
+                                          <div class="mt-2">
+                                              <button class="btn btn-info" (click)="show(p.patient_id._id)">
+                                              Get Transcript
+                                              </button>
+                                          </div>
+                                      </td>
+                                  </tr>
+                              </tbody>
+                          </table>
+                      </div>
+                  </div>
+              </div>
+  
+      <div class="container-fluid" *ngIf="patient_transcription">
+          <div class="row">
+              <div class="col-lg-6 col-md-12">
+                  <div class="card card-nav-tabs">
+                      <div class="card-header" data-background-color="purple">
+                          <div class="nav-tabs-navigation">
+                              <div class="nav-tabs-wrapper">
+                                  <span class="nav-tabs-title"><h4>Transcript</h4></span>
+                                  <ul class="nav nav-tabs" data-tabs="tabs">
+                                      <li>
+                                          
+                                      </li>
+                                  </ul>
+                              </div>
+                          </div>
+                      </div>
+  
+                      <div class="card-content">
+                          <div class="tab-content">
+                              <div class="tab-pane active" id="profile">
+                                  <table class="table">
+                                      <tbody>
+                                          <tr *ngFor="let p_t of patient_transcription" >
+                                              <td>{{p_t.transcript.transcript}}</td>
+                                          </tr>
+                                      </tbody>
+                                  </table>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>

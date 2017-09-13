@@ -143,11 +143,17 @@ export class CallanalysisComponent implements OnInit {
       this.results=event.results;
     }
     if (event.speaker_labels){
-      if (event.speaker_labels.length == this.results[0].alternatives[0].timestamps.length && event.speaker_labels.length != this.lastCnt){
-        for (let i = 0; i < event.speaker_labels.length; i++){
-          for(let j =0; j < this.results[0].alternatives[0].timestamps.length; j++){
-            if(this.results[0].alternatives[0].timestamps[j][1]==event.speaker_labels[i].from){
-              this.trans.push({'speaker':event.speaker_labels[i].speaker, 'transcript':this.results[0].alternatives[0].timestamps[i][0]});        
+      //if (event.speaker_labels.length == this.results[0].alternatives[0].timestamps.length && event.speaker_labels.length != this.lastCnt){
+        for(let k=0; k< this.results.length; k++){
+          if(this.results[k].alternatives[0].timestamps){
+            for (let i = 0; i < event.speaker_labels.length; i++){
+              for(let j =0; j < this.results[k].alternatives[0].timestamps.length; j++){
+                if(this.results[k].alternatives[0].timestamps[j][1]==event.speaker_labels[i].from){
+                  console.log(this.results[k].alternatives[0])
+                  console.log(this.results[k].alternatives[0].timestamps[j])
+                  this.trans.push({'speaker':event.speaker_labels[i].speaker, 'transcript':this.results[k].alternatives[0].timestamps[j][0]});        
+                }
+              }          
             }
           }          
         }
@@ -161,7 +167,7 @@ export class CallanalysisComponent implements OnInit {
         }
         this.message = [];
         this.message = translation;
-      }
+      //}
     }
 
     if (name == 'Results:'){
@@ -174,7 +180,7 @@ export class CallanalysisComponent implements OnInit {
       if (event.speaker_labels[event.speaker_labels.length - 1]){
         let speaker = event.speaker_labels[event.speaker_labels.length - 1].speaker;
         if (this.transcript != this.oldTrans){
-          //this.message.push({speaker: speaker, transcript: this.transcript});
+          this.message.push({speaker: speaker, transcript: this.transcript});
           if (speaker != 0){
             this.trs += ' ' + this.transcript;
             this.postService(environment.baseUrl + 'transcriptions/fetchLiveRecordingData/'+localStorage.getItem('_token'), {trs: this.trs, transcript: this.transcript}).then(result => {

@@ -44,12 +44,11 @@ export class LoginComponent implements OnInit {
     this.loginError = null;
     this.http.post(environment.baseUrl + 'user/login', { email: user.email, password: user.password })
       .map((response: Response) => {
-
-        console.log(response.json());
         // login successful if there's a jwt token in the response
         if (response.json().data && response.json().data.token) {
           // store user details and jwt token in local storage to keep user logged in between page refreshes
           localStorage.setItem('_token', response.json().data.token);
+          localStorage.setItem('therapist_in', response.json().data._id);
         }
       })
       .subscribe(

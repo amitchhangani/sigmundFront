@@ -67,27 +67,37 @@ export class CallanalysisComponent implements OnInit {
 
       if (value[0].type === 'chat') {
         if ( Object.prototype.toString.call( value[0].data ) === '[object Array]' ) {
-            this.message = [];
-            this.message = value[0].data;
+            if(value[0].patient==localStorage.getItem('patient_id')){
+              this.message = [];
+              this.message = value[0].data;
+            }
         }else{
-            this.message.push(value[0].data);
+            if(value[0].patient==localStorage.getItem('patient_id')){
+              this.message.push(value[0].data);
+            }            
         }
         this.uploader.progress = 0;
       } else if (value[0].type === 'tone') {
-        this.tone = value[0].data;
-      } else if (value[0].type === 'recommendations') {
-        this.recommendations = value[0].data;
-        console.log('recomendation', this.recommendations);
-        this.showSubItems = value[0].data.map(i => false);
-      } else if (value[0].type === 'danger') {
-        this.danger = value[0].data;
-      } else if (value[0].type === 'sentiment') {
-        if (value[0].data.document.label == 'negative'){
-          this.sentiment = {transform: 'rotate(' + (-(value[0].data.document.score * 90)) + 'deg)'};
-        }else{
-          this.sentiment = {transform: 'rotate(' + (90 - (value[0].data.document.score * 90) - 90) + 'deg)'};
+        if(value[0].patient==localStorage.getItem('patient_id')){
+          this.tone = value[0].data;
         }
-
+      } else if (value[0].type === 'recommendations') {
+        if(value[0].patient==localStorage.getItem('patient_id')){
+          this.recommendations = value[0].data;
+          this.showSubItems = value[0].data.map(i => false);
+        }
+      } else if (value[0].type === 'danger') {
+        if(value[0].patient==localStorage.getItem('patient_id')){
+          this.danger = value[0].data;
+        }
+      } else if (value[0].type === 'sentiment') {
+        if(value[0].patient==localStorage.getItem('patient_id')){
+          if (value[0].data.document.label == 'negative'){
+            this.sentiment = {transform: 'rotate(' + (-(value[0].data.document.score * 90)) + 'deg)'};
+          }else{
+            this.sentiment = {transform: 'rotate(' + (90 - (value[0].data.document.score * 90) - 90) + 'deg)'};
+          }
+        }
       }
     });
     this.headers = new Headers({
@@ -138,6 +148,12 @@ export class CallanalysisComponent implements OnInit {
   }
 
   showOption(patient) {
+    this.message=[];
+    this.sentiment=[];
+    this.tone=[];
+    this.recommendations=[];
+    this.showSubItems=[];
+    this.danger=2;
     localStorage.setItem('patient_name_for_chat', patient.name);
     localStorage.setItem('patient_email_for_chat', patient.email);
     localStorage.setItem('patient_id', patient._id);
@@ -179,8 +195,8 @@ export class CallanalysisComponent implements OnInit {
             for (let i = 0; i < event.speaker_labels.length; i++){
               for(let j =0; j < this.results[k].alternatives[0].timestamps.length; j++){
                 if(this.results[k].alternatives[0].timestamps[j][1]==event.speaker_labels[i].from){
-                  console.log(this.results[k].alternatives[0])
-                  console.log(this.results[k].alternatives[0].timestamps[j])
+                  //console.log(this.results[k].alternatives[0])
+                  //console.log(this.results[k].alternatives[0].timestamps[j])
                   this.trans.push({'speaker':event.speaker_labels[i].speaker, 'transcript':this.results[k].alternatives[0].timestamps[j][0]});        
                 }
               }          
@@ -195,8 +211,12 @@ export class CallanalysisComponent implements OnInit {
           }
           this.lastSp=this.trans[i].speaker;
         }
-        this.message = [];
-        this.message = translation;
+        //this.message = [];
+        //this.message = translation;
+        this.postService(environment.baseUrl + 'transcriptions/fetchLiveRecordingData/' + this.transcriptId_for_recording + '/' +localStorage.getItem('_token')+'/1', {speakers:translation}).then(result => {
+
+
+            }).catch(error => console.log(error));
       //}
     }
 
@@ -210,14 +230,14 @@ export class CallanalysisComponent implements OnInit {
       if (event.speaker_labels[event.speaker_labels.length - 1]){
         let speaker = event.speaker_labels[event.speaker_labels.length - 1].speaker;
         if (this.transcript != this.oldTrans) {
-          this.message.push({speaker: speaker, transcript: this.transcript});
-          if (speaker != 0){
+          //this.message.push({speaker: speaker, transcript: this.transcript});
+          //if (speaker != 0){
             this.trs += ' ' + this.transcript;
-            this.postService(environment.baseUrl + 'transcriptions/fetchLiveRecordingData/' + this.transcriptId_for_recording + '/' +localStorage.getItem('_token'), {trs: this.trs, transcript: this.transcript,speaker: speaker}).then(result => {
+            this.postService(environment.baseUrl + 'transcriptions/fetchLiveRecordingData/' + this.transcriptId_for_recording + '/' +localStorage.getItem('_token')+'/1', {trs: this.trs, transcript: this.transcript,speaker: speaker}).then(result => {
 
 
             }).catch(error => console.log(error));
-          }
+          //}
         }
         this.oldTrans = this.transcript;
         speaker = 0;
@@ -236,7 +256,7 @@ export class CallanalysisComponent implements OnInit {
     this.getService(environment.baseUrl + 'transcriptions/startLiveRec/' + localStorage.getItem('patient_id') + '/'
     + localStorage.getItem('_token'))
     .then(result => {
-      this.transcriptId_for_recording =  result.data._id;
+      this.transcriptId_for_recording =  result.data._id; // this transcription_id needed for live recording 
       this.lastCnt = 0;
       this.lastIndex = 0;
       this.lastSp = 0;

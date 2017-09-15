@@ -46,7 +46,7 @@ export class DashboardComponent implements OnInit {
   }
 
   show(id: any ) {
-    this.getService(environment.baseUrl + 'patient/patient_transcription' + '/' + id , this.options)
+    this.getService(environment.baseUrl + 'patient/patient_all_transcription' + '/' + id , this.options)
     .then(result => {
       this.patient_transcription = result.data;
     })

@@ -14,23 +14,23 @@ export class SocketService {
   constructor() {
     this.initSocket();
     this.socket.on('transcript', (data) => {
-      const msg = [{ 'type': 'chat', 'data': data }];
+      const msg = [{ 'type': 'chat', 'data': data.trans, 'patient':data.patient }];
       this.eventCallback.next(msg);
     });
     this.socket.on('tone', (data) => {
-      const tone = [{ 'type': 'tone', 'data': data }];
+      const tone = [{ 'type': 'tone', 'data': data.tone, 'patient':data.patient }];
       this.eventCallback.next(tone);
     });
     this.socket.on('recommendations', (data) => {
-      const tone = [{ 'type': 'recommendations', 'data': data }];
+      const tone = [{ 'type': 'recommendations', 'data': data.reco, 'patient':data.patient }];
       this.eventCallback.next(tone);
     });
     this.socket.on('danger', (data) => {
-      const tone = [{ 'type': 'danger', 'data': data }];
+      const tone = [{ 'type': 'danger', 'data': data.danger, 'patient':data.patient }];
       this.eventCallback.next(tone);
     });
     this.socket.on('sentiment', (data) => {
-      const tone = [{ 'type': 'sentiment', 'data': data }];
+      const tone = [{ 'type': 'sentiment', 'data': data.senti, 'patient':data.patient }];
       this.eventCallback.next(tone);
     });
   }

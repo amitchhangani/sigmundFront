@@ -44,7 +44,8 @@ export class UserPatientComponent implements OnInit {
   }
 
   show(id: any ) {
-    this.getService(environment.baseUrl + 'patient/patient_transcription' + '/' + id , this.options)
+    debugger;
+    this.getService(environment.baseUrl + 'patient/patient_transcription' + '/' + id._id , this.options)
     .then(result => {
       this.patient_transcription = result.data;
     })

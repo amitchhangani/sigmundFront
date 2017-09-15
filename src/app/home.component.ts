@@ -1,3 +1,6 @@
+import { UserUpdateComponent } from './user/user-update.component';
+import { UserAddComponent } from './user/user-add.component';
+import { UserComponent } from './user/user.component';
 import {
   Component, AfterViewInit, OnDestroy, ViewChild, ElementRef,
   Renderer, trigger, state, transition, style, animate
@@ -22,6 +25,9 @@ export const homeRoutes: Routes = [
   { path: 'patient', component: PatientComponent },
   { path: 'patient_add', component: PatientAddComponent },
   { path: 'patient_update', component: PatientUpdateComponent },
+  { path: 'therapist', component: UserComponent },
+  { path: 'therapist_add', component: UserAddComponent },
+  { path: 'therapist_update', component: UserUpdateComponent },
   { path: 'user_patient', component: UserPatientComponent}
 
   // { path: 'dashboard', component: DashboardComponent, children: dashboardRoutes, canActivate: [DashboardRouteGuard] },

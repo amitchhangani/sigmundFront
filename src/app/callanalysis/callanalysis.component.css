@@ -14,3 +14,9 @@
 	width: 120px;
 	margin: 0 6px 0 0;
 }
+
+.mat-select {
+    display: inline-block;
+    outline: 0;
+    margin-left: 175px;
+}

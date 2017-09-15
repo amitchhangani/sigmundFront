@@ -22,6 +22,8 @@ import {
 //   }
 // }
 
+
+
 @Component({
   selector: 'app-user',
   moduleId: module.id,
@@ -37,6 +39,7 @@ export class CallanalysisComponent implements OnInit {
   public uploader: FileUploader;
   public hasBaseDropZoneOver: boolean;
   public hasAnotherDropZoneOver: boolean;
+  transcriptId_for_recording;
   message: any = [];
   tone: any = [];
   recommendations: any = [];
@@ -49,8 +52,16 @@ export class CallanalysisComponent implements OnInit {
   showDivArr = [];
   showSubItems = [];
   itemsArray = [];
+  patient;
   patient_name;
   patient_email;
+  selectedValue;
+  foods = [
+    {value: 'steak-0', viewValue: 'Steak'},
+    {value: 'pizza-1', viewValue: 'Pizza'},
+    {value: 'tacos-2', viewValue: 'Tacos'}
+  ];
+
   constructor(private socketService: SocketService, private http: Http, private router: Router) {
     this.socketService.eventCallback$.subscribe(value => {
 
@@ -66,6 +77,7 @@ export class CallanalysisComponent implements OnInit {
         this.tone = value[0].data;
       } else if (value[0].type === 'recommendations') {
         this.recommendations = value[0].data;
+        console.log('recomendation', this.recommendations);
         this.showSubItems = value[0].data.map(i => false);
       } else if (value[0].type === 'danger') {
         this.danger = value[0].data;
@@ -102,6 +114,7 @@ export class CallanalysisComponent implements OnInit {
 
     this.patient_name = localStorage.getItem('patient_name_for_chat');
     this.patient_email = localStorage.getItem('patient_email_for_chat');
+    this.selectedValue = localStorage.getItem('patient_id');
     if (localStorage.getItem('patient_id')) {
        this.getService(environment.baseUrl + 'recommendations/getToken').then(result => {
           this.token = result.token;
@@ -109,9 +122,29 @@ export class CallanalysisComponent implements OnInit {
     }else {
       this.router.navigate(['/patient']);
     }
+
+    this.headers = new Headers({
+      'Content-Type': 'application/json',
+      'Accept': 'q=0.8;application/json;q=0.9',
+      'Authorization': 'Bearer ' + localStorage.getItem('_token')
+    });
+    this.options = new RequestOptions({ headers: this.headers });
+    this.getService(environment.baseUrl + 'patient/fetch_all')
+    .then(result => {
+      this.patient = result.data;
+    })
+    .catch(error => console.log(error));
+
   }
 
-
+  showOption(patient) {
+    localStorage.setItem('patient_name_for_chat', patient.name);
+    localStorage.setItem('patient_email_for_chat', patient.email);
+    localStorage.setItem('patient_id', patient._id);
+    this.patient_name = localStorage.getItem('patient_name_for_chat');
+    this.patient_email = localStorage.getItem('patient_email_for_chat');
+    this.selectedValue = patient._id;
+  }
 
   public chatTimeLine: any[] = [
     {
@@ -124,7 +157,6 @@ export class CallanalysisComponent implements OnInit {
     }
   ];
 
-  public recordStatus = 'Start';
   public btnCondition = true;
   public highLighteditem: number;
   lastCnt: Number= 0;
@@ -177,11 +209,11 @@ export class CallanalysisComponent implements OnInit {
     if (name == 'Speaker_Labels:'){
       if (event.speaker_labels[event.speaker_labels.length - 1]){
         let speaker = event.speaker_labels[event.speaker_labels.length - 1].speaker;
-        if (this.transcript != this.oldTrans){
+        if (this.transcript != this.oldTrans) {
           this.message.push({speaker: speaker, transcript: this.transcript});
           if (speaker != 0){
             this.trs += ' ' + this.transcript;
-            this.postService(environment.baseUrl + 'transcriptions/fetchLiveRecordingData/'+localStorage.getItem('_token'), {trs: this.trs, transcript: this.transcript}).then(result => {
+            this.postService(environment.baseUrl + 'transcriptions/fetchLiveRecordingData/' + this.transcriptId_for_recording + '/' +localStorage.getItem('_token'), {trs: this.trs, transcript: this.transcript,speaker: speaker}).then(result => {
 
 
             }).catch(error => console.log(error));
@@ -193,10 +225,18 @@ export class CallanalysisComponent implements OnInit {
     }
 
   }
-  
 
   startMicRecording() {
-    if (!this.btnCondition){
+    this.headers = new Headers({
+      'Content-Type': 'application/json',
+      'Accept': 'q=0.8;application/json;q=0.9',
+      'Authorization': 'Bearer ' + localStorage.getItem('_token')
+    });
+    this.options = new RequestOptions({ headers: this.headers });
+    this.getService(environment.baseUrl + 'transcriptions/startLiveRec/' + localStorage.getItem('patient_id') + '/'
+    + localStorage.getItem('_token'))
+    .then(result => {
+      this.transcriptId_for_recording =  result.data._id;
       this.lastCnt = 0;
       this.lastIndex = 0;
       this.lastSp = 0;
@@ -221,11 +261,14 @@ export class CallanalysisComponent implements OnInit {
           this.onEvent('Speaker_Labels:', data);
       });
 
-    }else{
-      this.stream.stop();
-      //this.message=[];
-    }
+    }).catch(error => console.log(error));
+
   }
+
+  stopRec() {
+    this.stream.stop();
+  }
+
   oldTrans = '';
   transcript = '';
 
@@ -249,7 +292,6 @@ export class CallanalysisComponent implements OnInit {
 
   toggleBtnTxt() {
     this.btnCondition = !this.btnCondition;
-    this.recordStatus = this.btnCondition ? 'Start' : 'Stop';
   }
 
   accordionTitleClick(targetVal) {

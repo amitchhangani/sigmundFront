@@ -6,17 +6,26 @@
         <div class="card chat-card">
           <div class="card-heading clearfix">
             <div class="card-heading-left">
-              <div class="btn btn-danger" [ngClass]="{'btn-danger': btnCondition, 'btn-info': !btnCondition}"
+              <div *ngIf="btnCondition" class="btn btn-danger" [ngClass]="{'btn-danger': true, 'btn-info': false}"
                       (click)="toggleBtnTxt(); startMicRecording()">
-                <i *ngIf="btnCondition" class="icon material-icons">mic</i>
-                <i *ngIf="!btnCondition" class="material-icons">mic_off</i>
-                {{recordStatus}} Recording
+                <i class="icon material-icons">mic</i>
+                Start Recording
+              </div>
+
+              <div  *ngIf="!btnCondition" class="btn btn-danger" (click)="stopRec()" [ngClass]="{'btn-danger': false, 'btn-info': true}"
+              (click)="toggleBtnTxt();">
+                <i class="material-icons">mic_off</i>
+                Stop Recording  
               </div>
 
               <div class="btn btn-danger load-file"><i class="icon material-icons">file_upload</i> Load File
                 <input type="file" ng2FileSelect [uploader]="uploader" accept="audio/*" (change)="onChange()"/>
               </div>
-
+              <md-select placeholder="Select Patient" [(ngModel)]="selectedValue" >
+                <md-option *ngFor="let pat of patient" [value]="pat._id" (click)="showOption(pat)">
+                  {{ pat.name }}
+                </md-option>
+              </md-select>
               <div class="user-info" *ngIf="patient_name">
                   <p><strong>Patient:</strong>{{patient_name}}</p>
                   <p><strong>Email:</strong>{{patient_email}}</p>

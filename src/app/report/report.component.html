@@ -13,50 +13,19 @@
                                         <th># of appearances</th>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>Depression</td>
-                                            <td>24</td>
+                                        <tr *ngFor="let a of tags">
+                                            <td>{{a.text}}</td>
+                                            <td>{{a.weight}}</td>
                                         </tr>
-                                        <tr>
-                                            <td>Alcohol</td>
-                                            <td>19</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Drunk</td>
-                                            <td>17</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Scared</td>
-                                            <td>13</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Self Harm</td>
-                                            <td>12</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Anger</td>
-                                            <td>9</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Nightmares</td>
-                                            <td>9</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Joy</td>
-                                            <td>7</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Disgust</td>
-                                            <td>2</td>
-                                        </tr>
+                                        
                                     </tbody>
                                 </table>
                             </div>
                             <div class="col-sm-7 tag_cloud"><angular-tag-cloud
         [data]="data"
-        [width]="options.width"
-        [height]="options.height"
-        [overflow]="options.overflow">
+        [width]="cloudoptions.width"
+        [height]="cloudoptions.height"
+        [overflow]="cloudoptions.overflow">
       </angular-tag-cloud></div>
                         </div>
                     </md-tab>

@@ -74,7 +74,6 @@ export class UserAddComponent implements OnInit {  user: any;
 
   ngOnInit() {
     this.user = emptyUser.result;
-    debugger;
   }
 
   onSubmit(user: any) {

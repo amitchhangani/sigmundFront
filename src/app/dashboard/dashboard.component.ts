@@ -14,6 +14,7 @@ export class DashboardComponent implements OnInit {
   pat_id;
   patient_error;
   patient_transcription ;
+  user_patient;
   headers = new Headers({
     'Content-Type': 'application/json',
     'Accept': 'q=0.8;application/json;q=0.9',
@@ -41,6 +42,13 @@ export class DashboardComponent implements OnInit {
     this.getService(environment.baseUrl + 'patient/fetch_all', this.options)
     .then(result => {
       this.patient = result.data;
+    })
+    .catch(error => console.log(error));
+    this.getService(environment.baseUrl + 'patient/patient_all_patient', this.options)
+    .then(result => {
+      
+      this.user_patient = result.data;
+      console.log("data",this.user_patient)
     })
     .catch(error => console.log(error));
   }

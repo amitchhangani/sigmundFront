@@ -29,7 +29,6 @@ export class PatientComponent implements OnInit {
   constructor(private http: Http, private router: Router) {
   }
   ngOnInit() {
-    console.log("this is patient",localStorage.getItem(''))
     if (localStorage.getItem('patient_id')) {
       this.pat_id = localStorage.getItem('patient_id');
     }else {
@@ -37,7 +36,10 @@ export class PatientComponent implements OnInit {
     }
     this.onini();
   }
-
+show(id: any) {
+  localStorage.setItem('pId_4_trans', id);
+  this.router.navigate(['patient_transcription']);
+}
   onini() {
     this.headers = new Headers({
       'Content-Type': 'application/json',

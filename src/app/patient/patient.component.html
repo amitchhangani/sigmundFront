@@ -22,6 +22,7 @@
                             <th>Call</th>
                             <th>Action</th>
                             <th>Selected Patient</th>
+                            <th>Show Transcription</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -49,6 +50,13 @@
                           <td>
                               <md-radio-button value="1" rel="tooltip" [checked]="p._id === pat_id" title="Select Patient" (click)="select(p)"></md-radio-button>
                           </td>
+                          <td>                                        
+                            <div class="mt-2">
+                                <button class="btn btn-info" (click)="show(p._id)">
+                                Get All Transcription
+                                </button>
+                            </div>
+                        </td>
                         </tr>
                     </tbody>
                 </table>

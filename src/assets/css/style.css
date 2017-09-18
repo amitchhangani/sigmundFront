@@ -304,6 +304,16 @@ h5 {
     padding: 10px 15px;
     position: relative;
 }
+.fa-angle-left, .fa-angle-right{
+    display:none;
+}
+.chat-timeline-content:hover .fa-angle-left{
+    display:inline-block;
+}
+
+.chat-timeline-content:hover .fa-angle-right{
+    display:inline-block;
+}
 
 .chat-timeline-content:before {
     content: '';

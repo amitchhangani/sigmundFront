@@ -33,6 +33,10 @@ export class SocketService {
       const tone = [{ 'type': 'sentiment', 'data': data.senti, 'patient':data.patient }];
       this.eventCallback.next(tone);
     });
+    this.socket.on('transcriptionId', (data) => {
+      const tone = [{ 'type': 'transcriptionId', 'data': data.transcriptionId }];
+      this.eventCallback.next(tone);
+    });
   }
 
   private initSocket(): void {

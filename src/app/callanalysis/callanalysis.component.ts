@@ -61,6 +61,9 @@ export class CallanalysisComponent implements OnInit {
     {value: 'pizza-1', viewValue: 'Pizza'},
     {value: 'tacos-2', viewValue: 'Tacos'}
   ];
+  messageCount=0;
+  shiftedMessages : any = [];
+  transcriptionId = "";
 
   constructor(private socketService: SocketService, private http: Http, private router: Router) {
     this.socketService.eventCallback$.subscribe(value => {
@@ -70,6 +73,7 @@ export class CallanalysisComponent implements OnInit {
             if(value[0].patient==localStorage.getItem('patient_id')){
               this.message = [];
               this.message = value[0].data;
+              this.messageCount = this.message.length;
             }
         }else{
             if(value[0].patient==localStorage.getItem('patient_id')){
@@ -98,6 +102,8 @@ export class CallanalysisComponent implements OnInit {
             this.sentiment = {transform: 'rotate(' + (90 - (value[0].data.document.score * 90) - 90) + 'deg)'};
           }
         }
+      }else if(value[0].type === 'transcriptionId'){
+        this.transcriptionId=value[0].data;
       }
     });
     this.headers = new Headers({
@@ -111,8 +117,8 @@ export class CallanalysisComponent implements OnInit {
     const tokenn = 'Bearer' + ' ' + localStorage.getItem('_token');
     const patient_id = localStorage.getItem('patient_id');
     this.fileOptions = new RequestOptions({ headers: this.fileHeaders });
-    this.uploader = new FileUploader(
-      { url: environment.baseUrl + 'transcriptions/upload/' + localStorage.getItem('_token'),
+    this.uploader = new FileUploader({ 
+      url: environment.baseUrl + 'transcriptions/upload/' + localStorage.getItem('_token'),
       authToken : tokenn
     });
     this.uploader.options.additionalParameter = {
@@ -120,8 +126,26 @@ export class CallanalysisComponent implements OnInit {
     };
   }
 
-  ngOnInit() {
+  shift(index, speaker){
+    this.message[index].speaker = speaker>0?0:1;
+    if(this.messageCount>0){
+      this.sentiment=[];
+      this.tone=[];
+      this.recommendations=[];
+      this.showSubItems=[];
+      this.danger=2;
+      this.shiftedMessages.push({index:index, speaker:this.message[index].speaker});
+      if(this.transcriptionId){
+        this.postService(environment.baseUrl + 'transcriptions/fetchLiveRecordingData/' + this.transcriptionId + '/' +localStorage.getItem('_token') +'/1', {speakers:this.message}).then(result => {
+        }).catch(error => console.log(error));
+      }else if(this.transcriptId_for_recording){
+        this.postService(environment.baseUrl + 'transcriptions/fetchLiveRecordingData/' + this.transcriptId_for_recording + '/' +localStorage.getItem('_token') +'/1', {speakers:this.message}).then(result => {
+        }).catch(error => console.log(error));
+      }
+    }
+  }
 
+  ngOnInit() {
     this.patient_name = localStorage.getItem('patient_name_for_chat');
     this.patient_email = localStorage.getItem('patient_email_for_chat');
     this.selectedValue = localStorage.getItem('patient_id');
@@ -144,7 +168,6 @@ export class CallanalysisComponent implements OnInit {
       this.patient = result.data;
     })
     .catch(error => console.log(error));
-
   }
 
   showOption(patient) {
@@ -154,6 +177,8 @@ export class CallanalysisComponent implements OnInit {
     this.recommendations=[];
     this.showSubItems=[];
     this.danger=2;
+    this.messageCount=0;
+    this.shiftedMessages=[];
     localStorage.setItem('patient_name_for_chat', patient.name);
     localStorage.setItem('patient_email_for_chat', patient.email);
     localStorage.setItem('patient_id', patient._id);
@@ -190,34 +215,30 @@ export class CallanalysisComponent implements OnInit {
     }
     if (event.speaker_labels){
       //if (event.speaker_labels.length == this.results[0].alternatives[0].timestamps.length && event.speaker_labels.length != this.lastCnt){
-        for(let k=0; k< this.results.length; k++){
-          if(this.results[k].alternatives[0].timestamps){
-            for (let i = 0; i < event.speaker_labels.length; i++){
-              for(let j =0; j < this.results[k].alternatives[0].timestamps.length; j++){
-                if(this.results[k].alternatives[0].timestamps[j][1]==event.speaker_labels[i].from){
-                  //console.log(this.results[k].alternatives[0])
-                  //console.log(this.results[k].alternatives[0].timestamps[j])
-                  this.trans.push({'speaker':event.speaker_labels[i].speaker, 'transcript':this.results[k].alternatives[0].timestamps[j][0]});        
-                }
-              }          
-            }
-          }          
-        }
-        for(var i=0; i< this.trans.length; i++){
-          if(translation.length==0 || this.lastSp!=this.trans[i].speaker){
-            translation.push({"speaker":this.trans[i].speaker,"transcript":this.trans[i].transcript})
-          }else{
-            translation[translation.length-1].transcript+=" "+this.trans[i].transcript;
+      for(let k=0; k< this.results.length; k++){
+        if(this.results[k].alternatives[0].timestamps){
+          for (let i = 0; i < event.speaker_labels.length; i++){
+            for(let j =0; j < this.results[k].alternatives[0].timestamps.length; j++){
+              if(this.results[k].alternatives[0].timestamps[j][1]==event.speaker_labels[i].from){
+                this.trans.push({'speaker':event.speaker_labels[i].speaker, 'transcript':this.results[k].alternatives[0].timestamps[j][0]});        
+              }
+            }          
           }
-          this.lastSp=this.trans[i].speaker;
+        }          
+      }
+      for(var i=0; i< this.trans.length; i++){
+        if(translation.length==0 || this.lastSp!=this.trans[i].speaker){
+          translation.push({"speaker":this.trans[i].speaker,"transcript":this.trans[i].transcript})
+        }else{
+          translation[translation.length-1].transcript+=" "+this.trans[i].transcript;
         }
-        //this.message = [];
-        //this.message = translation;
-        this.postService(environment.baseUrl + 'transcriptions/fetchLiveRecordingData/' + this.transcriptId_for_recording + '/' +localStorage.getItem('_token')+'/1', {speakers:translation}).then(result => {
-
-
-            }).catch(error => console.log(error));
-      //}
+        this.lastSp=this.trans[i].speaker;
+      }
+      for(var i=0; i < this.shiftedMessages.length; i++){
+        translation[this.shiftedMessages[i].index].speaker = this.shiftedMessages[i].speaker;
+      }
+      this.postService(environment.baseUrl + 'transcriptions/fetchLiveRecordingData/' + this.transcriptId_for_recording + '/' +localStorage.getItem('_token')+'/1', {speakers:translation}).then(result => {
+      }).catch(error => console.log(error));
     }
 
     if (name == 'Results:'){
@@ -243,7 +264,6 @@ export class CallanalysisComponent implements OnInit {
         speaker = 0;
       }
     }
-
   }
 
   startMicRecording() {
@@ -263,6 +283,8 @@ export class CallanalysisComponent implements OnInit {
       this.trans = [];
       this.message = [];
       this.trs = '';
+      this.messageCount=0;
+      this.shiftedMessages=[];
       this.stream = recognizeMicrophone({
         token: this.token,
         speaker_labels: true,
@@ -280,9 +302,7 @@ export class CallanalysisComponent implements OnInit {
         if (data.speaker_labels)
           this.onEvent('Speaker_Labels:', data);
       });
-
     }).catch(error => console.log(error));
-
   }
 
   stopRec() {

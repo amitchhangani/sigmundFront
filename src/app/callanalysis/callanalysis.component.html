@@ -42,20 +42,21 @@
             </div>
           </div>
           <div class="card-content chat-body" *ngIf="message.length > 0">
-            <div *ngFor="let item of message">
+            <div *ngFor="let item of message; let i=index;">
 
               <div class="chat-timeline chat-timeline-right" *ngIf="item.speaker===0">
                 <div class="chat-timeline-avtar">
                   <figure>T</figure>
                   <span> Therapist </span></div>
-                <div class="chat-timeline-content">{{item.transcript}}</div>
+                <div class="chat-timeline-content"> <i (click)="shift(i, item.speaker)" class="fa fa-angle-left fa-2" aria-hidden="true"></i> {{item.transcript}}</div>
               </div>
 
               <div class="chat-timeline chat-timeline-left" *ngIf="item.speaker > 0 ">
                 <div class="chat-timeline-avtar">
                   <figure> P </figure>
                   <span>Patient</span></div>
-                <div class="chat-timeline-content">{{item.transcript}}</div>
+                <div class="chat-timeline-content">{{item.transcript}} <i (click)="shift(i, item.speaker)" class="fa fa-angle-right fa-2" aria-hidden="true"></i>
+ </div>
               </div>
               <!--<chatline *ngFor="let item of chatTimeLine" [chatInfo]="item" [timeLineClass]="item.userChatClass" [chatContent]="item.chatConent"></chatline>-->
             </div>

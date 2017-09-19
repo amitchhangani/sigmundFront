@@ -7,12 +7,13 @@ import { environment } from '../../environments/environment';
 <div class="main-content">
     <div class="container-fluid">
     <div class="row">
-        <div class="col-lg-12 col-md-12">
+        <div class="col-lg-12 col-md-12" *ngFor="let p_t of patient_transcription">
             <div class="card card-nav-tabs">
                 <div class="card-header" data-background-color="purple">
                     <div class="nav-tabs-navigation">
                         <div class="nav-tabs-wrapper">
-                            <span class="nav-tabs-title"><h4>Transcript</h4></span>
+                            <span class="nav-tabs-title"><h3>Transcript</h3>
+                            <div class="card-header-text"><strong>{{p_t[0].created | date}}</strong></div></span>
                             <ul class="nav nav-tabs" data-tabs="tabs">
                             </ul>
                         </div>
@@ -23,8 +24,20 @@ import { environment } from '../../environments/environment';
                         <div class="tab-pane active" id="profile">
                             <table class="table">
                                 <tbody>
-                                    <tr *ngFor="let p_t of patient_transcription" >
-                                        <td>{{p_t.transcript.transcript}}</td>
+                                    <tr *ngFor="let a of p_t">
+                                    <div class="chat-timeline chat-timeline-right" *ngIf="a.transcript.speaker === 0 ">
+                                        <div class="chat-timeline-avtar">
+                                            <figure>T</figure>
+                                            <span> Therapist </span></div>
+                                        <div class="chat-timeline-content">{{a.transcript.transcript}}</div>
+                                    </div>
+                                    <div class="chat-timeline chat-timeline-left" *ngIf="a.transcript.speaker > 0 ">
+                                    <div class="chat-timeline-avtar">
+                                        <figure> P </figure>
+                                        <span>Patient</span>
+                                    </div>
+                                    <div class="chat-timeline-content">{{a.transcript.transcript}}</div>
+                                </div>
                                     </tr>
                                 </tbody>
                             </table>

@@ -46,19 +46,24 @@ export class DashboardComponent implements OnInit {
     .catch(error => console.log(error));
     this.getService(environment.baseUrl + 'patient/patient_all_patient', this.options)
     .then(result => {
-      
       this.user_patient = result.data;
-      console.log("data",this.user_patient)
     })
     .catch(error => console.log(error));
   }
 
-  show(id: any ) {
-    this.getService(environment.baseUrl + 'patient/patient_all_transcription' + '/' + id , this.options)
-    .then(result => {
-      this.patient_transcription = result.data;
-    })
-    .catch(error => this.patient_transcription = '');
+  // show(id: any ) {
+  //   this.getService(environment.baseUrl + 'patient/patient_all_transcription' + '/' + id , this.options)
+  //   .then(result => {
+  //     this.patient_transcription = result.data;
+  //   })
+  //   .catch(error => this.patient_transcription = '');
+  // }
+
+  show(id: any) {
+    localStorage.setItem('pId_4_trans', id);
+    localStorage.setItem('from_user', 'false');
+    // this.router.navigate(['patient_transcription']); //for all transcription
+    this.router.navigate(['/user_patient']);
   }
 
   call(patient: any) {

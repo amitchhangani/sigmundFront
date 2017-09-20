@@ -9,13 +9,14 @@ import { environment } from '../../environments/environment';
   styleUrls: ['./user-patient.component.css']
 })
 export class UserPatientComponent implements OnInit {
-
+  showFromUser: boolean;
   p: any;
   closeResult: string;
   patient= [];
   patient_error;
   patient_transcription ;
-  user_patient;
+  user_patient; // get all transcription of user/therapist
+  patient_user; // get all transcription of patient
   headers = new Headers({
     'Content-Type': 'application/json',
     'Accept': 'q=0.8;application/json;q=0.9',
@@ -26,29 +27,46 @@ export class UserPatientComponent implements OnInit {
   }
   ngOnInit() {
     this.user_patient = localStorage.getItem('userid_for_patientlist');
+    this.patient_user = localStorage.getItem('pId_4_trans');
     this.onini();
   }
 
   onini() {
+    const from_user = localStorage.getItem('from_user');
+    console.log('from_user', from_user);
     this.headers = new Headers({
       'Content-Type': 'application/json',
       'Accept': 'q=0.8;application/json;q=0.9',
       'Authorization': 'Bearer ' + localStorage.getItem('_token')
     });
     this.options = new RequestOptions({ headers: this.headers });
-    this.getService(environment.baseUrl + 'patient/user_patient' + '/' + this.user_patient, this.options)
-    .then(result => {
-      this.patient = result.data;
-    })
-    .catch(error => this.patient_error = 'Patient Recording are not available');
+    if (from_user === 'true') {
+      this.showFromUser = true;
+      this.getService(environment.baseUrl + 'patient/user_patient' + '/' + this.user_patient, this.options)
+      .then(result => {
+        this.patient = result.data;
+      })
+      .catch(error => this.patient_error = 'Patient Recording are not available');
+    }
+    if (from_user === 'false') {
+       this.showFromUser = false;
+      this.getService(environment.baseUrl + 'patient/patient_user' + '/' + this.patient_user, this.options)
+      .then(result => {
+        this.patient = result.data;
+      })
+      .catch(error => this.patient_error = 'Patient Recording are not available');
+    }
   }
 
   show(id: any ) {
-    this.getService(environment.baseUrl + 'patient/patient_transcription' + '/' + id._id , this.options)
-    .then(result => {
-      this.patient_transcription = result.data;
-    })
-    .catch(error => this.patient_transcription = '');
+    // transcription id
+    localStorage.setItem('patient_id_transcription', id._id);
+    this.router.navigate(['/patient_id_transcription']);
+    // this.getService(environment.baseUrl + 'patient/patient_transcription' + '/' + id._id , this.options)
+    // .then(result => {
+    //   this.patient_transcription = result.data;
+    // })
+    // .catch(error => this.patient_transcription = '');
   }
 
   call(patient: any) {

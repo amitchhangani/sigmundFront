@@ -20,6 +20,7 @@
                             <th>Name</th>
                             <th>Email</th>
                             <th>Action</th>
+                            <th>Show Transcription</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -36,6 +37,9 @@
 
                                 <i class="material-icons">close</i>
                               </button>
+                          </td>
+                          <td (click)="showRec(p._id)">
+                            <button>Show Recordings</button>
                           </td>
                         </tr>
                     </tbody>

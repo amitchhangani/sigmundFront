@@ -80,6 +80,7 @@ export class SettingsComponent implements OnInit {
   }
 
   showRec = (user_id: any) => {
+    localStorage.setItem('from_user', 'true');
     localStorage.setItem('userid_for_patientlist', user_id);
     this.router.navigate(['/user_patient']);
   }

@@ -8,28 +8,25 @@ import { Http, Response, Headers, RequestOptions } from '@angular/http';
   templateUrl: './report.component.html',
   styleUrls: ['./report.component.css']
 })
-export class ReportComponent implements OnInit {  
-  
+export class ReportComponent implements OnInit {
   headers: Headers;
   options: RequestOptions;
-  tags :any = [];
-  data: Array<CloudData>;  
+  tags: any = [];
+  data: Array<CloudData>;
 
-  constructor( private http: Http) { 
+  constructor( private http: Http) {
       this.headers = new Headers({
       'Content-Type': 'application/json',
       'Accept': 'q=0.8;application/json;q=0.9',
     });
     this.options = new RequestOptions({ headers: this.headers });
   }
-  
   ngOnInit() {
     this.getService(environment.baseUrl + 'recommendations/getPatientRecommendations').then(result => {
-          
           for(let key in result.tags){
               this.tags.push({text:key,weight:result.tags[key]});
           }
-          this.data=this.tags;
+          this.data = this.tags;
         }).catch(error => console.log(error));
   }
 

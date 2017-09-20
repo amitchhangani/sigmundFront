@@ -1,3 +1,4 @@
+import { ShowTranscriptionComponent } from './user-patient/show-transcription.component';
 import { PatientTranscriptionComponent } from './patient/patient-transcription.component';
 import { UserUpdateComponent } from './user/user-update.component';
 import { UserAddComponent } from './user/user-add.component';
@@ -30,8 +31,8 @@ export const homeRoutes: Routes = [
   { path: 'therapist_add', component: UserAddComponent },
   { path: 'therapist_update', component: UserUpdateComponent },
   { path: 'user_patient', component: UserPatientComponent},
-  { path: 'patient_transcription', component : PatientTranscriptionComponent }
-
+  { path: 'patient_transcription', component : PatientTranscriptionComponent },
+  { path: 'patient_id_transcription', component : ShowTranscriptionComponent }
   // { path: 'dashboard', component: DashboardComponent, children: dashboardRoutes, canActivate: [DashboardRouteGuard] },
   // {
   //   path: '',

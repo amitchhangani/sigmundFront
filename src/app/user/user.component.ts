@@ -69,6 +69,11 @@ export class UserComponent implements OnInit {
     .catch(error => console.log(error));
   }
 
+  showRec(user_id: any) {
+    localStorage.setItem('from_user', 'true');
+    localStorage.setItem('userid_for_patientlist', user_id);
+    this.router.navigate(['/user_patient']);
+  }
   edit(id: any) {
     localStorage.setItem('user_id_for_updation', id);
     this.router.navigate(['/therapist_update']);

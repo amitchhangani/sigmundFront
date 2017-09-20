@@ -69,6 +69,7 @@ import { UserComponent } from './user/user.component';
 import { UserAddComponent } from './user/user-add.component';
 import { UserUpdateComponent } from './user/user-update.component';
 import { PatientTranscriptionComponent } from './patient/patient-transcription.component';
+import { ShowTranscriptionComponent } from './user-patient/show-transcription.component';
 
 @NgModule({
   declarations: [
@@ -87,7 +88,7 @@ import { PatientTranscriptionComponent } from './patient/patient-transcription.c
     SlidebarComponent,
     ReportComponent,
     ChatLineComponent,
-    FileDropDirective, FileSelectDirective, RoundPipe, PatientComponent, PatientAddComponent, PatientUpdateComponent, UserPatientComponent, UserComponent, UserAddComponent, UserUpdateComponent, PatientTranscriptionComponent
+    FileDropDirective, FileSelectDirective, RoundPipe, PatientComponent, PatientAddComponent, PatientUpdateComponent, UserPatientComponent, UserComponent, UserAddComponent, UserUpdateComponent, PatientTranscriptionComponent, ShowTranscriptionComponent
   ],
   imports: [
     BrowserModule,

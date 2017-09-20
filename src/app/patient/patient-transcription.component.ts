@@ -7,13 +7,13 @@ import { environment } from '../../environments/environment';
 <div class="main-content">
     <div class="container-fluid">
     <div class="row">
-        <div class="col-lg-12 col-md-12" *ngFor="let p_t of patient_transcription">
+        <div class="col-lg-12 col-md-12" *ngFor="let p_t of patient_transcription; let i=index">
             <div class="card card-nav-tabs">
                 <div class="card-header" data-background-color="purple">
                     <div class="nav-tabs-navigation">
                         <div class="nav-tabs-wrapper">
                             <span class="nav-tabs-title"><h3>Transcript</h3>
-                            <div class="card-header-text"><strong>{{p_t[0].created | date}}</strong></div></span>
+                            <div class="card-header-text"><strong>{{p_t[i].created | date}}</strong></div></span>
                             <ul class="nav nav-tabs" data-tabs="tabs">
                             </ul>
                         </div>

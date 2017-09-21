@@ -1,5 +1,5 @@
 import { Declaration } from '@angular/compiler/src/i18n/serializers/xml_helper';
-import { Component, OnInit, Pipe, PipeTransform, Input } from '@angular/core';
+import { Component, OnInit, Pipe, PipeTransform, Input, AfterViewChecked, ElementRef, ViewChild } from '@angular/core';
 import { SocketService } from '../shared/socket/socket.service';
 import { environment } from '../../environments/environment';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
@@ -30,7 +30,8 @@ import {
   templateUrl: 'callanalysis.component.html',
   styleUrls: ['callanalysis.component.css']
 })
-export class CallanalysisComponent implements OnInit {
+export class CallanalysisComponent implements OnInit, AfterViewChecked {
+  @ViewChild('scrollMe') private myScrollContainer: ElementRef;
   output = '#output';
   headers: Headers;
   options: RequestOptions;
@@ -74,10 +75,12 @@ export class CallanalysisComponent implements OnInit {
               this.message = [];
               this.message = value[0].data;
               this.messageCount = this.message.length;
+              this.scrollToBottom();  
             }
         }else{
             if(value[0].patient==localStorage.getItem('patient_id')){
               this.message.push(value[0].data);
+              this.scrollToBottom();  
             }            
         }
         this.uploader.progress = 0;
@@ -168,8 +171,17 @@ export class CallanalysisComponent implements OnInit {
       this.patient = result.data;
     })
     .catch(error => console.log(error));
+    this.scrollToBottom();
   }
 
+ ngAfterViewChecked() {        
+    this.scrollToBottom();        
+  }
+ scrollToBottom(): void {
+    try {
+        this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
+    } catch(err) { }                 
+  }
   showOption(patient) {
     this.message=[];
     this.sentiment=[];
@@ -238,6 +250,7 @@ export class CallanalysisComponent implements OnInit {
         translation[this.shiftedMessages[i].index].speaker = this.shiftedMessages[i].speaker;
       }
       this.postService(environment.baseUrl + 'transcriptions/fetchLiveRecordingData/' + this.transcriptId_for_recording + '/' +localStorage.getItem('_token')+'/1', {speakers:translation}).then(result => {
+        this.scrollToBottom();  
       }).catch(error => console.log(error));
     }
 
@@ -256,7 +269,7 @@ export class CallanalysisComponent implements OnInit {
             this.trs += ' ' + this.transcript;
             this.postService(environment.baseUrl + 'transcriptions/fetchLiveRecordingData/' + this.transcriptId_for_recording + '/' +localStorage.getItem('_token')+'/1', {trs: this.trs, transcript: this.transcript,speaker: speaker}).then(result => {
 
-
+              this.scrollToBottom();  
             }).catch(error => console.log(error));
           //}
         }

@@ -49,8 +49,80 @@ import { CloudData, CloudOptions } from 'angular-tag-cloud-module';
                   </div>
               </div>
           </div>
-         <!-- <md-tab-group>
-          <md-tab label="Keywords">
+          <div class="col-sm-5">
+        <div class="card">
+          <div class="card-content">
+            <h4 class="calldanger-title">Call Danger of Self Harm</h4>
+            <figure>
+              <app-heat-map [rangeValue]="danger"></app-heat-map>
+            </figure>
+            <h4 class="recommend-title">Recommendations:</h4>
+            <div *ngFor="let rec of recommendations; let k = index" class="recommendation-box " [ngClass]="{'openbox': rec.tags.length}">
+              <div class="recommend-head" (click)="accordionTitleClick(k)" *ngIf="rec.tags.length">
+                <div class="recommend-head-title"><span>{{rec.name}}</span></div>
+                <div class="recommend-repeat"><span>{{rec.count}} Times</span></div>
+                <div class="recommend-percent" *ngIf="rec.tags"><span>{{rec.percent}}%</span></div>
+              </div>
+              <div class="recommend-body" *ngIf="this.showSubItems[k]">
+                <div *ngFor="let tags of rec.tags; let i=index" style="float:left">
+                  <span *ngIf="i>0">, </span><label  (click)="cnt=tags.count"><strong>{{tags.tag}}</strong> </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card" *ngIf="tone">
+          <div class="card-content sentimenatalbox">
+            <div class="row">
+              <div class="col-sm-6">
+                <h4>Call Sentiments</h4>
+                <figure class="pie-chart">
+                  <div class="pie-chart-top">
+                      <img src="assets/img/pie-chart.png" alt="pie">
+                      <img src="assets/img/pin.png" [ngStyle]="sentiment" class="pie-pin" alt="pin" />
+                      <div class="pie-chart-info clearfix">
+                          <div class="pie-positive pull-left">Positive</div>
+                          <div class="pie-negative pull-right">Negative</div>
+                      </div>
+                  </div>
+                  <div class="pie-chart-bottom">
+                      <img src="assets/img/emotion.jpg" alt="" />
+                  </div>
+              </figure>
+              </div>
+              <div class="col-sm-6" *ngIf="tone.length">
+                <h4>Emotional status</h4>
+                <figure>                  
+                  <div class="emotion-strip">
+                    <app-emotion-graph [emotionValue]="tone[0].score | round" [emotionText]="tone[0].tone_name"
+                                       [emotionColor]="'#a9baa7'"></app-emotion-graph>
+                  </div>
+                  <div class="emotion-strip">
+                    <app-emotion-graph [emotionValue]="tone[1].score | round" [emotionText]="tone[1].tone_name"
+                                       [emotionColor]="'#5ba7db'"></app-emotion-graph>
+                  </div>
+                  <div class="emotion-strip">
+                    <app-emotion-graph [emotionValue]="tone[2].score | round" [emotionText]="tone[2].tone_name"
+                                       [emotionColor]="'#b9a4cb'"></app-emotion-graph>
+                  </div>
+                  <div class="emotion-strip">
+                    <app-emotion-graph [emotionValue]="tone[3].score | round" [emotionText]="tone[3].tone_name"
+                                       [emotionColor]="'#f397a4'"></app-emotion-graph>
+                  </div>
+                  <div class="emotion-strip">
+                    <app-emotion-graph [emotionValue]="tone[4].score | round" [emotionText]="tone[4].tone_name"
+                                       [emotionColor]="'#ffd529'"></app-emotion-graph>
+                  </div>
+                </figure>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      </div>
+      <md-tab-group>
+          <md-tab>
               <div class="clearfix keyword-wrap">
                   <div class="col-sm-5">
                       <table class="table">
@@ -75,69 +147,8 @@ import { CloudData, CloudOptions } from 'angular-tag-cloud-module';
 </angular-tag-cloud></div>
               </div>
           </md-tab>
-          <md-tab label="Personality">
-              <div class="clearfix mt-15 personality-wrap">
-                  <div class="col-sm-2">
-                      <img src="../assets/img/openness.png" class="img-responsive" alt="">
-                  </div>
-                  <div class="col-sm-2">
-                      <img src="../assets/img/Conscientiousness.png" class="img-responsive" alt="">
-                  </div>
-                  <div class="col-sm-2">
-                      <img src="../assets/img/Extraversion.png" class="img-responsive" alt="">
-                  </div>
-                  <div class="col-sm-2">
-                      <img src="../assets/img/Agreeableness.png" class="img-responsive" alt="">
-                  </div>
-                  <div class="col-sm-2">
-                      <img src="../assets/img/Emotional_Range.png" class="img-responsive" alt="">
-                  </div>
-                  <div class="col-sm-2">
-                      <img src="../assets/img/Harmony.png" class="img-responsive" alt="">
-                  </div>
-              </div>
-              <div class="clearfix">
-                  <div class="col-sm-6">
-                      <div class="panel panel-default">
-                          <div class="panel-heading clearfix">
-                              <div class="row">
-                                  <div class="col-sm-6">
-                                      <h3 class="panel-title">Session 1</h3>
-                                  </div>
-                                  <div class="col-sm-6 text-right">
-                                      <div class="calendar"><i class="zmdi zmdi-calendar-alt"></i> 27-7-2017</div>
-                                      <div class="time"><i class="zmdi zmdi-time"></i> 09:22AM</div>
-                                  </div>
-                              </div>
-                          </div>
-                          <div class="panel-body">
-                              <img src="../assets/img/personality_graph1.jpg" class="img-responsive">
-                          </div>
-                      </div>
-                  </div>
-                  <div class="col-sm-6">
-                      <div class="panel panel-default">
-                          <div class="panel-heading">
-                              <div class="row">
-                                  <div class="col-sm-6">
-                                      <h3 class="panel-title">Session 2</h3>
-                                  </div>
-                                  <div class="col-sm-6 text-right">
-                                      <div class="calendar"><i class="zmdi zmdi-calendar-alt"></i> 27-7-2017</div>
-                                      <div class="time"><i class="zmdi zmdi-time"></i> 09:22AM</div>
-                                  </div>
-                              </div>
-                          </div>
-                          <div class="panel-body">
-                              <img src="../assets/img/personality_graph2.jpg" class="img-responsive">
-                          </div>
-                      </div>
-                  </div>
-                  <div class="col-sm-12 text-center"><button class="btn btn-danger"> View more sessions  <i class="zmdi zmdi-chevron-down"></i></button></div>
-              </div>
-          </md-tab>
-      </md-tab-group> -->
-      </div>
+          
+      </md-tab-group>
   </div>
 </div>
 
@@ -147,6 +158,8 @@ import { CloudData, CloudOptions } from 'angular-tag-cloud-module';
 export class ShowTranscriptionComponent implements OnInit {
   patient_transcription ;
   tags: any = [];
+  tone: any= [];
+  sentiment: any =[];
   data: Array<CloudData>;
   headers = new Headers({
     'Content-Type': 'application/json',
@@ -156,32 +169,71 @@ export class ShowTranscriptionComponent implements OnInit {
   tokenn = 'Bearer' + ' ' + localStorage.getItem('_token');
   constructor(private http: Http, private router: Router) {
   }
-
+  cloudoptions: CloudOptions = {
+        // if width is between 0 and 1 it will be set to the size of the upper element multiplied by the value  
+        width : 500,
+        height : 400,
+        overflow: false,
+      }
   ngOnInit() {
     const id = localStorage.getItem('patient_id_transcription');
     console.log('ididididi=>', id );
     this.getService(environment.baseUrl + 'patient/patient_transcription' + '/' + id , this.options)
     .then(result => {
+      let counter=0;
+      let nlucounter=0;
+      let nlu=0;
       this.patient_transcription = result.data;
+      for(let i=0; i<this.patient_transcription.length; i++){
+        if(this.patient_transcription[i].transcript.tone.length){
+          if(this.tone.length){
+            this.tone[0].score+=this.patient_transcription[i].transcript.tone[0].score;
+            this.tone[1].score+=this.patient_transcription[i].transcript.tone[1].score;
+            this.tone[2].score+=this.patient_transcription[i].transcript.tone[2].score;
+            this.tone[3].score+=this.patient_transcription[i].transcript.tone[3].score;
+            this.tone[4].score+=this.patient_transcription[i].transcript.tone[4].score;
+          }else{
+            this.tone=this.patient_transcription[i].transcript.tone;
+          }
+          counter++;
+        }
+        if(this.patient_transcription[i].transcript.nlu){          
+          nlu+=this.patient_transcription[i].transcript.nlu.document.score;
+          nlucounter++;
+        }
+      }
+      if(this.tone.length){
+        this.tone[0].score/=counter;
+        this.tone[1].score/=counter;
+        this.tone[2].score/=counter;
+        this.tone[3].score/=counter;
+        this.tone[4].score/=counter;
+      }
+      console.log("nlu",nlu);
+      if(nlu){
+        nlu/=nlucounter;
+      }
+      if(nlu<0){
+        this.sentiment = {transform: 'rotate(' + (-(nlu * 90)) + 'deg)'};
+      }else{
+        this.sentiment = {transform: 'rotate(' + (90 - (nlu * 90) - 90) + 'deg)'};
+      }
     })
     .catch(error => this.patient_transcription = '');
     
     // this is for specific tech cloud for one patient
 
-    // this.getService(environment.baseUrl + 'recommendations/getPatientRec/' + id, this.options).then(result => {
-    //     for(let key in result.tags){
-    //         this.tags.push({text:key,weight:result.tags[key]});
-    //     }
-    //     this.data = this.tags;
-    //     debugger;
-    //   }).catch(error => console.log(error));
+    
 
-    //   cloudoptions: CloudOptions = {
-    //     // if width is between 0 and 1 it will be set to the size of the upper element multiplied by the value  
-    //     width : 500,
-    //     height : 400,
-    //     overflow: false,
-    //   }
+      
+
+    this.getService(environment.baseUrl + 'recommendations/getPatientRec/' + id, this.options).then(result => {
+        for(let key in result.tags){
+            this.tags.push({text:key,weight:result.tags[key]});
+        }
+        this.data = this.tags;
+        debugger;
+      }).catch(error => console.log(error));
   }
 
 

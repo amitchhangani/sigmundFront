@@ -47,8 +47,7 @@ export class UserPatientComponent implements OnInit {
         this.patient = result.data;
       })
       .catch(error => this.patient_error = 'Patient Recording are not available');
-    }
-    if (from_user === 'false') {
+    } else {
        this.showFromUser = false;
       this.getService(environment.baseUrl + 'patient/patient_user' + '/' + this.patient_user, this.options)
       .then(result => {

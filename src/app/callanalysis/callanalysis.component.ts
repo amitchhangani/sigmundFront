@@ -95,7 +95,9 @@ export class CallanalysisComponent implements OnInit, AfterViewChecked {
         }
       } else if (value[0].type === 'danger') {
         if(value[0].patient==localStorage.getItem('patient_id')){
+          
           this.danger = value[0].data;
+          debugger;
         }
       } else if (value[0].type === 'sentiment') {
         if(value[0].patient==localStorage.getItem('patient_id')){

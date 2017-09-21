@@ -38,8 +38,12 @@ export class PatientComponent implements OnInit {
   }
 show(id: any) {
   localStorage.setItem('pId_4_trans', id);
-  this.router.navigate(['patient_transcription']);
+  localStorage.setItem('from_user', 'false');
+  // this.router.navigate(['patient_transcription']); //for all transcription
+  this.router.navigate(['/user_patient']);
 }
+
+
   onini() {
     this.headers = new Headers({
       'Content-Type': 'application/json',

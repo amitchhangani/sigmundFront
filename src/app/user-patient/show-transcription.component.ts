@@ -232,7 +232,6 @@ export class ShowTranscriptionComponent implements OnInit {
             this.tags.push({text:key,weight:result.tags[key]});
         }
         this.data = this.tags;
-        debugger;
       }).catch(error => console.log(error));
   }
 

@@ -371,7 +371,7 @@ export class CallanalysisComponent implements OnInit, AfterViewChecked {
     // for audio progress
     let p_min = 0;
     let p_sec = 0;
-    this.audio_progress = p_min + ':' + p_sec;
+    this.audio_progress = p_min + ':0' + p_sec;
 
     this.fileduration = 0;
     const temp = this.duration / 100;
@@ -398,11 +398,15 @@ export class CallanalysisComponent implements OnInit, AfterViewChecked {
       if (this.audio_progress === this.total_duration ) {
       }else {
         p_sec++;
-        if ( p_sec > 60 ) {
+        if ( p_sec > 59 ) {
           p_min ++;
           p_sec = 0;
         }
-        this.audio_progress = p_min + ':' + p_sec;
+        if (p_sec <= 9 ) {
+          this.audio_progress = p_min + ':0' + p_sec;
+        }else {
+          this.audio_progress = p_min + ':' + p_sec;
+        }
       }
     }, 1000);
 

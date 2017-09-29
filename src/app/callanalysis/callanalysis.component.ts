@@ -68,7 +68,8 @@ export class CallanalysisComponent implements OnInit, AfterViewChecked {
   shiftedMessages : any = [];
   transcriptionId = "";
   duration;
-  noduration;
+  total_duration;
+  audio_progress;
   constructor(private socketService: SocketService, private http: Http, private router: Router) {
     this.socketService.eventCallback$.subscribe(value => {
 
@@ -363,18 +364,45 @@ export class CallanalysisComponent implements OnInit, AfterViewChecked {
     this.message = [];
     this.uploader.onCompleteItem = (item: any, response: any, status: any, headers: any) => {
      this.duration = JSON.parse(response).duration;
+     // for total duration
+    const minutes = Math.floor(this.duration / 60);
+    const seconds = Math.floor(this.duration - minutes * 60);
+    this.total_duration = minutes + ':' + seconds;
+    // for audio progress
+    let p_min = 0;
+    let p_sec = 0;
+    this.audio_progress = p_min + ':' + p_sec;
+
     this.fileduration = 0;
     const temp = this.duration / 100;
     let temp2 = 0;
     let temp3 = 0;
+
+    setInterval(() => {
+      if(this.fileduration < 100){
+        this.fileduration++;
+      }
+    }, temp * 1000);
     setInterval( () => {
-      if ( temp3 < this.duration ) {
-        if (temp2 > temp) {
-          this.fileduration++;
-          temp2 = 0;
+      // for pregress bar
+      // if ( temp3 < this.duration ) {
+      //   if (temp2 > temp) {
+      //     // this.fileduration++;
+      //     temp2 = 0;
+      //   }
+      //   debugger;
+      //   temp2++;
+      //   temp3 += 1;
+      // }
+      // for progress
+      if (this.audio_progress === this.total_duration ) {
+      }else {
+        p_sec++;
+        if ( p_sec > 60 ) {
+          p_min ++;
+          p_sec = 0;
         }
-        temp2++;
-        temp3 += 1;
+        this.audio_progress = p_min + ':' + p_sec;
       }
     }, 1000);
 

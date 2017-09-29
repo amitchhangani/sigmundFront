@@ -1232,3 +1232,24 @@ h5 {
   height: 100%;
   opacity: 0;
 }
+
+.time-duration span {
+ 
+}
+.total_duration {
+    vertical-align: top;
+    font-weight: 600;
+    background: #eee;
+    padding: 2px 10px;
+    border-radius: 15px;
+    float: right;
+}
+
+.audio_process {
+    float: left;
+    vertical-align: top;
+    font-weight: 600;
+    background: #eee;
+    padding: 2px 10px;
+    border-radius: 15px;
+}

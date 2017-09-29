@@ -364,15 +364,19 @@ export class CallanalysisComponent implements OnInit, AfterViewChecked {
     this.message = [];
     this.uploader.onCompleteItem = (item: any, response: any, status: any, headers: any) => {
      this.duration = JSON.parse(response).duration;
+     let temp_duration = 0;
      // for total duration
     const minutes = Math.floor(this.duration / 60);
     const seconds = Math.floor(this.duration - minutes * 60);
-    this.total_duration = minutes + ':' + seconds;
+    if(minutes === 0 && Math.floor(this.duration) <10){
+      this.total_duration = minutes + ':0' + seconds;  
+    }else {
+      this.total_duration = minutes + ':' + seconds;
+    }
     // for audio progress
     let p_min = 0;
     let p_sec = 0;
     this.audio_progress = p_min + ':0' + p_sec;
-
     this.fileduration = 0;
     const temp = this.duration / 100;
     let temp2 = 0;
@@ -395,8 +399,10 @@ export class CallanalysisComponent implements OnInit, AfterViewChecked {
       //   temp3 += 1;
       // }
       // for progress
-      if (this.audio_progress === this.total_duration ) {
+      if (temp_duration === Math.floor(this.duration) || temp_duration > Math.floor(this.duration) ) {
+debugger;
       }else {
+debugger;
         p_sec++;
         if ( p_sec > 59 ) {
           p_min ++;
@@ -408,6 +414,7 @@ export class CallanalysisComponent implements OnInit, AfterViewChecked {
           this.audio_progress = p_min + ':' + p_sec;
         }
       }
+      temp_duration++;
     }, 1000);
 
   };

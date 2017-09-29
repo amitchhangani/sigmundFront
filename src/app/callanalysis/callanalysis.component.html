@@ -30,9 +30,12 @@
                   <p><strong>Patient:</strong>{{patient_name}}</p>
                   <p><strong>Email:</strong>{{patient_email}}</p>
               </div>
-              <div class="progress" [ngStyle]="{'display': uploader.progress?'block':'none'}">
-                <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': uploader.progress + '%' }"></div>
+              <div class="progress" [ngStyle]="{'display': uploader.progress?'block':'none'}" *ngIf="duration">
+                <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': fileduration + '%' }"></div>
               </div>
+              <!-- <div class="progress" [ngStyle]="{'display': uploader.progress?'block':'none'}" *ngIf="noduration">
+                  <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': uploader.progress + '%' }"></div>
+                </div> -->
             </div>
             <div class="card-heading-right" *ngIf="cnt"><span> 1 of {{cnt}}</span>
               <div class="card-heading-rightbtn">

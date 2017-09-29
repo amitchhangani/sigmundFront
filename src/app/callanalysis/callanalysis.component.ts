@@ -32,6 +32,7 @@ import {
 })
 export class CallanalysisComponent implements OnInit, AfterViewChecked {
   @ViewChild('scrollMe') private myScrollContainer: ElementRef;
+  @ViewChild('metadata') private fileMetadata: ElementRef;
   output = '#output';
   headers: Headers;
   options: RequestOptions;
@@ -57,6 +58,7 @@ export class CallanalysisComponent implements OnInit, AfterViewChecked {
   patient_name;
   patient_email;
   selectedValue;
+  fileduration;
   foods = [
     {value: 'steak-0', viewValue: 'Steak'},
     {value: 'pizza-1', viewValue: 'Pizza'},
@@ -65,7 +67,8 @@ export class CallanalysisComponent implements OnInit, AfterViewChecked {
   messageCount=0;
   shiftedMessages : any = [];
   transcriptionId = "";
-
+  duration;
+  noduration;
   constructor(private socketService: SocketService, private http: Http, private router: Router) {
     this.socketService.eventCallback$.subscribe(value => {
 
@@ -83,7 +86,7 @@ export class CallanalysisComponent implements OnInit, AfterViewChecked {
               this.scrollToBottom();  
             }            
         }
-        this.uploader.progress = 0;
+        // this.uploader.progress = 0;
       } else if (value[0].type === 'tone') {
         if(value[0].patient==localStorage.getItem('patient_id')){
           this.tone = value[0].data;
@@ -97,7 +100,6 @@ export class CallanalysisComponent implements OnInit, AfterViewChecked {
         if(value[0].patient==localStorage.getItem('patient_id')){
           
           this.danger = value[0].data;
-          debugger;
         }
       } else if (value[0].type === 'sentiment') {
         if(value[0].patient==localStorage.getItem('patient_id')){
@@ -122,7 +124,7 @@ export class CallanalysisComponent implements OnInit, AfterViewChecked {
     const tokenn = 'Bearer' + ' ' + localStorage.getItem('_token');
     const patient_id = localStorage.getItem('patient_id');
     this.fileOptions = new RequestOptions({ headers: this.fileHeaders });
-    this.uploader = new FileUploader({ 
+    this.uploader = new FileUploader({
       url: environment.baseUrl + 'transcriptions/upload/' + localStorage.getItem('_token'),
       authToken : tokenn
     });
@@ -350,16 +352,33 @@ export class CallanalysisComponent implements OnInit, AfterViewChecked {
   }
 
   accordionTitleClick(targetVal) {
-    //this.highLighteditem = targetVal;
+    // this.highLighteditem = targetVal;
     this.showSubItems[targetVal] = !this.showSubItems[targetVal];
   }
-
   onChange() {
+    this.duration = 0;
     this.uploader.progress = 0;
     this.uploader.uploadAll();
     this.tone = [];
     this.message = [];
+    this.uploader.onCompleteItem = (item: any, response: any, status: any, headers: any) => {
+     this.duration = JSON.parse(response).duration;
+    this.fileduration = 0;
+    const temp = this.duration / 100;
+    let temp2 = 0;
+    let temp3 = 0;
+    setInterval( () => {
+      if ( temp3 < this.duration ) {
+        if (temp2 > temp) {
+          this.fileduration++;
+          temp2 = 0;
+        }
+        temp2++;
+        temp3 += 1;
+      }
+    }, 1000);
 
+  };
     // debugger;
     // console.log('onChange');
     // const files = event.srcElement.files;

@@ -56,7 +56,7 @@ export class LoginComponent implements OnInit {
 
           console.log('--->', data)
 
-          return this.router.navigate(['/setting']);
+          return this.router.navigate(['/dashboard']);
         },
         error => {
           console.log(error);

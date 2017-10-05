@@ -70,6 +70,10 @@ export class CallanalysisComponent implements OnInit, AfterViewChecked {
   duration;
   total_duration;
   audio_progress;
+  setInt1;
+  setInt2;
+  clearset1;
+  clearset2;
   constructor(private socketService: SocketService, private http: Http, private router: Router) {
     this.socketService.eventCallback$.subscribe(value => {
 
@@ -85,7 +89,7 @@ export class CallanalysisComponent implements OnInit, AfterViewChecked {
             if(value[0].patient==localStorage.getItem('patient_id')){
               this.message.push(value[0].data);
               this.scrollToBottom();  
-            }            
+            }
         }
         // this.uploader.progress = 0;
       } else if (value[0].type === 'tone') {
@@ -357,7 +361,14 @@ export class CallanalysisComponent implements OnInit, AfterViewChecked {
     this.showSubItems[targetVal] = !this.showSubItems[targetVal];
   }
   onChange() {
+    if (this.clearset1) {
+      clearInterval(this.setInt1);
+    }
+    if (this.setInt2) {
+      clearInterval(this.setInt2);
+    }
     this.duration = 0;
+    this.fileduration = 0;
     this.uploader.progress = 0;
     this.uploader.uploadAll();
     this.tone = [];
@@ -368,8 +379,8 @@ export class CallanalysisComponent implements OnInit, AfterViewChecked {
      // for total duration
     const minutes = Math.floor(this.duration / 60);
     const seconds = Math.floor(this.duration - minutes * 60);
-    if(minutes === 0 && Math.floor(this.duration) <10){
-      this.total_duration = minutes + ':0' + seconds;  
+    if (minutes === 0 && Math.floor(this.duration) < 10) {
+      this.total_duration = minutes + ':0' + seconds;
     }else {
       this.total_duration = minutes + ':' + seconds;
     }
@@ -377,17 +388,21 @@ export class CallanalysisComponent implements OnInit, AfterViewChecked {
     let p_min = 0;
     let p_sec = 0;
     this.audio_progress = p_min + ':0' + p_sec;
-    this.fileduration = 0;
+
     const temp = this.duration / 100;
     let temp2 = 0;
     let temp3 = 0;
 
-    setInterval(() => {
-      if(this.fileduration < 100){
+    this.setInt1 = setInterval(() => {
+      this.clearset1 = true;
+      if (this.fileduration < 100) {
         this.fileduration++;
+      }else {
+        clearInterval(this.setInt1);
       }
     }, temp * 1000);
-    setInterval( () => {
+    this.setInt2 = setInterval( () => {
+      this.clearset2 = true;
       // for pregress bar
       // if ( temp3 < this.duration ) {
       //   if (temp2 > temp) {
@@ -400,9 +415,9 @@ export class CallanalysisComponent implements OnInit, AfterViewChecked {
       // }
       // for progress
       if (temp_duration === Math.floor(this.duration) || temp_duration > Math.floor(this.duration) ) {
-debugger;
+        debugger;
+        clearInterval(this.setInt2);
       }else {
-debugger;
         p_sec++;
         if ( p_sec > 59 ) {
           p_min ++;
@@ -418,6 +433,8 @@ debugger;
     }, 1000);
 
   };
+  this.setInt1();
+  this.setInt2();
     // debugger;
     // console.log('onChange');
     // const files = event.srcElement.files;

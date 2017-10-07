@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { environment } from '../../environments/environment';
-import { CloudData, CloudOptions } from 'angular-tag-cloud-module';
+// import { CloudData, CloudOptions } from 'angular-tag-cloud-module';
+import {AgWordCloudModule, AgWordCloudData} from 'angular4-word-cloud';
 @Component({
   selector: 'app-show-transcription',
   template: `
@@ -133,21 +134,17 @@ import { CloudData, CloudOptions } from 'angular-tag-cloud-module';
                           <tbody>
                               <tr *ngFor="let a of tags">
                                   <td>{{a.text}}</td>
-                                  <td>{{a.weight}}</td>
+                                  <td>{{a.size}}</td>
                               </tr>
                               
                           </tbody>
                       </table>
                   </div>
-                  <div class="col-sm-7 tag_cloud"><angular-tag-cloud
-[data]="data"
-[width]="cloudoptions.width"
-[height]="cloudoptions.height"
-[overflow]="cloudoptions.overflow">
-</angular-tag-cloud></div>
+                  <div class="col-sm-7 tag_cloud">
+                    <div AgWordCloud *ngIf="wordData" #word_cloud_chart=ag-word-cloud  [(wordData)]="wordData"></div>
+                  </div>
               </div>
           </md-tab>
-          
       </md-tab-group>
   </div>
 </div>
@@ -160,7 +157,7 @@ export class ShowTranscriptionComponent implements OnInit {
   tags: any = [];
   tone: any= [];
   sentiment: any =[];
-  data: Array<CloudData>;
+  wordData: Array<AgWordCloudData>;
   headers = new Headers({
     'Content-Type': 'application/json',
     'Accept': 'q=0.8;application/json;q=0.9',
@@ -169,12 +166,6 @@ export class ShowTranscriptionComponent implements OnInit {
   tokenn = 'Bearer' + ' ' + localStorage.getItem('_token');
   constructor(private http: Http, private router: Router) {
   }
-  cloudoptions: CloudOptions = {
-        // if width is between 0 and 1 it will be set to the size of the upper element multiplied by the value  
-        width : 500,
-        height : 400,
-        overflow: false,
-      }
   ngOnInit() {
     const id = localStorage.getItem('patient_id_transcription');
     console.log('ididididi=>', id );
@@ -229,9 +220,9 @@ export class ShowTranscriptionComponent implements OnInit {
 
     this.getService(environment.baseUrl + 'recommendations/getPatientRec/' + id, this.options).then(result => {
         for(let key in result.tags){
-            this.tags.push({text:key,weight:result.tags[key]});
+            this.tags.push({text:key,size:result.tags[key]});
         }
-        this.data = this.tags;
+        this.wordData = this.tags;
       }).catch(error => console.log(error));
   }
 

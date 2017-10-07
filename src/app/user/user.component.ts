@@ -20,6 +20,8 @@ export class UserComponent implements OnInit {
   });
   options = new RequestOptions({ headers: this.headers });
   tokenn = 'Bearer' + ' ' + localStorage.getItem('_token');
+  image_server_url = environment.baseUrl;
+
   constructor(private http: Http, private router: Router) {
   }
   ngOnInit() {
@@ -43,7 +45,6 @@ export class UserComponent implements OnInit {
     .then(result => {
       this.user = result.data;
       this.user.map(i => {
-        console.log(i._id)
         if (this.therapist_in === i._id) {
           this.hideDelete.push(false);
         }else {
@@ -69,10 +70,12 @@ export class UserComponent implements OnInit {
     .catch(error => console.log(error));
   }
 
-  showRec(user_id: any) {
-    localStorage.setItem('from_user', 'true');
-    localStorage.setItem('userid_for_patientlist', user_id);
-    this.router.navigate(['/user_patient']);
+  showRec(user: any) {
+  localStorage.setItem('from_user', 'true');
+  localStorage.setItem('userid_for_patientlist', user._id);
+  localStorage.setItem('uname_4_user_patient', user.name);
+  localStorage.setItem('from_user', 'true');
+  this.router.navigate(['/user_patient']);
   }
   edit(id: any) {
     localStorage.setItem('user_id_for_updation', id);

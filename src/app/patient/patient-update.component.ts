@@ -2,7 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { environment } from '../../environments/environment';
-import { Http, Response } from '@angular/http';
+import {Http, Response, Headers, RequestOptions} from '@angular/http';
+import { FileUploader } from 'ng2-file-upload';
+
+
 @Component({
   selector: 'app-patient-add',
   template: `
@@ -26,8 +29,16 @@ import { Http, Response } from '@angular/http';
               <input mdInput [(ngModel)]="patient.email" required formControlName="email" placeholder="Email" type="text" [email]="true"/>
                       <md-error>This field is required</md-error>
                     </md-input-container>
+                    <label>Image*<span></span></label>
+                    <img *ngIf="patient_profile_picture" src='{{image_server_url}}uploads/patient/{{patient_profile_picture}}' style="width:50px;height:50px" >
+                    <div class="btn btn-success load-file"><i class="icon material-icons">file_upload</i> 
+                        <span *ngIf="patient_profile_picture">Change Image</span>
+                        <span *ngIf="!patient_profile_picture">Load Image</span>
+                      <input type="file" ng2FileSelect [uploader]="uploader"
+                      accept="image/*" (change)="onChange()"/>
+                    </div>
                     <div class="row">
-                      <div class="col-sm-6 form-group text-right">
+                      <div class="col-sm-8 form-group text-right">
                         <button class="btn btn-danger btn-login" type='submit'>Update</button>
                       </div>
                     </div>
@@ -43,12 +54,16 @@ import { Http, Response } from '@angular/http';
   `,
 })
 export class PatientUpdateComponent implements OnInit {
-  patient = { result: { name: '', email: '' } };
+  patient = { result: { name: '', email: '', image : '' } };
   patient_id: any;
   public form: FormGroup;
   returnUrl: string;
   loginError: string;
-
+  fileOptions: RequestOptions;
+  fileHeaders: Headers;
+  patient_profile_picture;
+  public uploader: FileUploader;
+  image_server_url = environment.baseUrl;
   constructor(
     private builder: FormBuilder,
     private router: Router,
@@ -58,6 +73,13 @@ export class PatientUpdateComponent implements OnInit {
     this.form = this.builder.group({
       email: ['', Validators.required],
       name: ['', Validators.required]
+    });
+    this.fileHeaders = new Headers({
+      'Content-Type': 'multipart/form-data'
+    });
+    this.fileOptions = new RequestOptions({ headers: this.fileHeaders });
+    this.uploader = new FileUploader({
+      url: environment.baseUrl + 'patient/upload'
     });
    }
 
@@ -71,6 +93,8 @@ export class PatientUpdateComponent implements OnInit {
       .subscribe(
         data => {
           this.patient = data.data;
+          this.patient_profile_picture = this.patient;
+          this.patient_profile_picture = this.patient_profile_picture.image;
         },
         error => {
           console.log(error);
@@ -78,9 +102,20 @@ export class PatientUpdateComponent implements OnInit {
         }
       );
   }
+
+  onChange() {
+    this.uploader.progress = 0;
+    this.uploader.uploadAll();
+    this.uploader.onCompleteItem = (item: any, response: any, status: any, headers: any) => {
+      this.patient_profile_picture = JSON.parse(response).file_name;
+  };
+  }
+
+
   onSubmit(patient: any ) {
     this.loginError = null;
-    this.http.put(environment.baseUrl + 'patient/update' + '/' + this.patient_id , { email: patient.email, name: patient.name } )
+    this.http.put(environment.baseUrl + 'patient/update' + '/' + this.patient_id , { email: patient.email,
+      name: patient.name, image : this.patient_profile_picture } )
       .map((response: Response) => {
         return response = response.json();
       })

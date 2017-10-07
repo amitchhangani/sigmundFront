@@ -18,6 +18,7 @@
                         <tr>
                             <th>ID</th>
                             <th>Name</th>
+                            <th>Image</th>
                             <th>Email</th>
                             <th>Action</th>
                             <th>Show Transcription</th>
@@ -28,6 +29,7 @@
                             <!-- <td>{{p._id}}</td> -->
                             <td>{{k+1}}</td>
                             <td>{{p.name}}</td>
+                            <td><img src="{{image_server_url}}uploads/therapist/{{p.image}}" style="width:50px;height:50px" > </td>
                             <td>{{p.email}}</td>
                             <td class="td-actions text-right">
                               <button type="button" rel="tooltip" title="Edit Task"  (click)="edit(p._id)" class="btn btn-primary btn-simple btn-xs">
@@ -38,7 +40,7 @@
                                 <i class="material-icons">close</i>
                               </button>
                           </td>
-                          <td (click)="showRec(p._id)">
+                          <td (click)="showRec(p)">
                             <button class="btn btn-info">Show Recordings</button>
                           </td>
                         </tr>

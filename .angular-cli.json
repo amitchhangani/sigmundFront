@@ -24,7 +24,9 @@
             "../src/assets/css/demo.css",
             "../src/assets/css/style.css"
         ],
-        "scripts": [],
+        "scripts": [
+            "../node_modules/angular4-word-cloud/d3.min.js"
+        ],
         "environmentSource": "environments/environment.ts",
         "environments": {
             "dev": "environments/environment.ts",

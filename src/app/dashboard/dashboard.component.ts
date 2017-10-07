@@ -12,6 +12,7 @@ export class DashboardComponent implements OnInit {
   closeResult: string;
   patient= [];
   pat_id;
+  weekRecord;
   patient_error;
   patient_transcription ;
   user_patient;
@@ -44,9 +45,16 @@ export class DashboardComponent implements OnInit {
       this.patient = result.data;
     })
     .catch(error => console.log(error));
+
     this.getService(environment.baseUrl + 'patient/patient_all_patient', this.options)
     .then(result => {
       this.user_patient = result.data;
+    })
+    .catch(error => console.log(error));
+
+    this.getService(environment.baseUrl + 'patient/patient_week_transcription', this.options)
+    .then(result => {
+      this.weekRecord = result.data;
     })
     .catch(error => console.log(error));
   }
@@ -59,8 +67,16 @@ export class DashboardComponent implements OnInit {
   //   .catch(error => this.patient_transcription = '');
   // }
 
-  show(id: any) {
-    localStorage.setItem('pId_4_trans', id);
+  getTherapist(therapist) {
+    localStorage.setItem('from_user', 'true');
+    localStorage.setItem('userid_for_patientlist', therapist._id);
+    localStorage.setItem('uname_4_user_patient', therapist.name);
+    this.router.navigate(['/user_patient']);
+  }
+
+  show(patient: any) {
+    localStorage.setItem('pId_4_trans', patient._id);
+    localStorage.setItem('pname_4_user_patient', patient.name);
     localStorage.setItem('from_user', 'false');
     // this.router.navigate(['patient_transcription']); //for all transcription
     this.router.navigate(['/user_patient']);
@@ -70,6 +86,7 @@ export class DashboardComponent implements OnInit {
     localStorage.setItem('patient_id', patient._id);
     localStorage.setItem('patient_name_for_chat', patient.name);
     localStorage.setItem('patient_email_for_chat', patient.email);
+    debugger;
     this.router.navigate(['/call-anylsis']);
   }
   // delete(id: any) {

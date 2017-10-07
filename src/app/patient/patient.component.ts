@@ -24,6 +24,7 @@ export class PatientComponent implements OnInit {
     'Content-Type': 'application/json',
     'Accept': 'q=0.8;application/json;q=0.9',
   });
+  image_server_url = environment.baseUrl;
   options = new RequestOptions({ headers: this.headers });
   tokenn = 'Bearer' + ' ' + localStorage.getItem('_token');
   constructor(private http: Http, private router: Router) {

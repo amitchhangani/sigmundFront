@@ -7,7 +7,6 @@ import {SettingsComponent} from './settings/settings.component';
 import {RouteGuard} from './shared/route-guards/route.guard';
 const appRoutes: Routes = [
    { path: '', component: HomeComponent, children: homeRoutes, canActivate: [RouteGuard]},
-  { path: 'setting', component: SettingsComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
 

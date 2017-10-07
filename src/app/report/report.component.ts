@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { CloudData, CloudOptions } from 'angular-tag-cloud-module';
+// import { CloudData, CloudOptions } from 'angular-tag-cloud-module';
 import { environment } from '../../environments/environment';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
-
+import {AgWordCloudModule, AgWordCloudData} from 'angular4-word-cloud';
 @Component({
   selector: 'app-report',
   templateUrl: './report.component.html',
@@ -11,8 +11,8 @@ import { Http, Response, Headers, RequestOptions } from '@angular/http';
 export class ReportComponent implements OnInit {
   headers: Headers;
   options: RequestOptions;
-  tags: any = [];
-  data: Array<CloudData>;
+  tags = [];
+  wordData: Array<AgWordCloudData>;
 
   constructor( private http: Http) {
       this.headers = new Headers({
@@ -23,22 +23,22 @@ export class ReportComponent implements OnInit {
   }
   ngOnInit() {
     this.getService(environment.baseUrl + 'recommendations/getPatientRecommendations').then(result => {
-          for(let key in result.tags){
-              this.tags.push({text:key,weight:result.tags[key]});
+          for (let key in result.tags) {
+              this.tags.push({text:key, size:result.tags[key]});
           }
-          this.data = this.tags;
+          console.log(this.wordData)
+          
+          this.wordData = this.tags;
+          debugger;
         }).catch(error => console.log(error));
   }
 
-  cloudoptions: CloudOptions = {
-    // if width is between 0 and 1 it will be set to the size of the upper element multiplied by the value  
-    width : 500,
-    height : 400,
-    overflow: false,
-  }
- 
-  
-
+  // cloudoptions: CloudOptions = {
+  //   // if width is between 0 and 1 it will be set to the size of the upper element multiplied by the value  
+  //   width : 500,
+  //   height : 400,
+  //   overflow: false,
+  // }
   getService(url: string): Promise<any> {
     return this.http
       .get(url, this.options)

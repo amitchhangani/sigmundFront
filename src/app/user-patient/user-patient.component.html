@@ -2,7 +2,19 @@
     <div class="col-lg-12 col-md-12">
         <div class="card" >
             <div class="card-header" data-background-color="orange">
-                <h4 class="title">Patients Stats</h4>
+                <h4 class="title" *ngIf=showFromUser>Stats for <strong>{{therapist_name}}</strong> 
+                </h4>
+                <h4 class="title" *ngIf=!showFromUser>Stats for <strong> {{patient_name}} </strong> </h4>
+                <md-select  placeholder="Select Patient" *ngIf=!showFromUser [(ngModel)]="selectedValue">
+                    <md-option *ngFor="let pat of patient_for_dropdown" [value]="pat.name" (click)="showOption(pat)">
+                        {{pat.name}}
+                    </md-option>
+                </md-select>
+                <md-select  placeholder="Select Therapist" *ngIf=showFromUser [(ngModel)]="selectedValue2">
+                        <md-option *ngFor="let the of therapist_for_dropdown" [value]="the.user.name" (click)="showOption2(the.user)">
+                            {{the.user.name}}
+                        </md-option>
+                    </md-select>
                 <em style="color: red;">{{patient_error}}</em>
             </div>
             <div class="card-content table-responsive" style="height:500px; overflow:auto">
@@ -10,9 +22,11 @@
                     <thead class="text-warning">
                         <tr>
                             <th>ID</th>
-                            <th>Transcriptions</th>
                             <th *ngIf=showFromUser>Patient</th>
                             <th *ngIf=!showFromUser>Therapist</th>
+                            <th>Date</th>
+                            <th>Duration</th>
+                            <th>Risk</th>
                             <th *ngIf=showFromUser > Call</th>
                             <th>Show Transcript </th>
                         </tr>
@@ -20,19 +34,21 @@
                     <tbody>
                         <tr *ngFor=" let p of patient; let k = index ">
                             <td>{{k+1}}</td>
-                            <td>Transcript {{k+1}}</td>
-                            <td *ngIf=showFromUser>{{p.patient_id.name}}</td>
-                            <td *ngIf=!showFromUser>{{p.user_id.name}}</td> 
+                            <td *ngIf=showFromUser>{{p.patient_name}}</td>
+                            <td *ngIf=!showFromUser>{{p.therapist_name}}</td>
+                            <td>{{p.date | date }}</td>
+                            <td>{{p.duration}}</td>
+                            <td *ngIf=p.risk>{{p.risk}}</td><td *ngIf=!p.risk>0</td>
                             <td *ngIf=showFromUser>                                            
                                 <div class="mt-2"  >
-                                    <button class="btn btn-info" (click)="call(p.patient_id)">
+                                    <button class="btn btn-info" (click)="call(p)">
                                     Call
                                     </button>
                                 </div>
                             </td>
                             <td>                                        
                                 <div class="mt-2">
-                                    <button class="btn btn-info" (click)="show(p)">
+                                    <button class="btn btn-info" (click)="show(p.transcript_id)">
                                     Get Transcript
                                     </button>
                                 </div>

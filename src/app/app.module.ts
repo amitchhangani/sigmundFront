@@ -18,7 +18,6 @@ import {
   MdCardModule,
   MdCheckboxModule,
   MdChipsModule,
-  MdCoreModule,
   MdDatepickerModule,
   MdDialogModule,
   MdExpansionModule,
@@ -49,7 +48,6 @@ import { FooterComponent } from './shared/footer/footer.component';
 import { NavbarComponent } from './shared/navbar/navbar.component';
 import { SidebarComponent } from './shared/sidebar/sidebar.component';
 import { SettingsComponent } from './settings/settings.component';
-import { CdkTableModule } from '@angular/cdk';
 import { CallanalysisComponent } from './callanalysis/callanalysis.component';
 import { SlidebarComponent } from './component/slidebar/slidebar.component';
 import { EmotionGraphComponent } from './component/emotion-graph/emotion-graph.component';
@@ -70,6 +68,7 @@ import { UserAddComponent } from './user/user-add.component';
 import { UserUpdateComponent } from './user/user-update.component';
 import { PatientTranscriptionComponent } from './patient/patient-transcription.component';
 import { ShowTranscriptionComponent } from './user-patient/show-transcription.component';
+import {AgWordCloudModule} from 'angular4-word-cloud';
 
 @NgModule({
   declarations: [
@@ -88,7 +87,9 @@ import { ShowTranscriptionComponent } from './user-patient/show-transcription.co
     SlidebarComponent,
     ReportComponent,
     ChatLineComponent,
-    FileDropDirective, FileSelectDirective, RoundPipe, PatientComponent, PatientAddComponent, PatientUpdateComponent, UserPatientComponent, UserComponent, UserAddComponent, UserUpdateComponent, PatientTranscriptionComponent, ShowTranscriptionComponent
+    FileDropDirective, FileSelectDirective, RoundPipe, PatientComponent,
+    PatientAddComponent, PatientUpdateComponent, UserPatientComponent, UserComponent,
+    UserAddComponent, UserUpdateComponent, PatientTranscriptionComponent, ShowTranscriptionComponent
   ],
   imports: [
     BrowserModule,
@@ -102,7 +103,6 @@ import { ShowTranscriptionComponent } from './user-patient/show-transcription.co
     MdCardModule,
     MdCheckboxModule,
     MdChipsModule,
-    MdCoreModule,
     MdDatepickerModule,
     MdDialogModule,
     MdExpansionModule,
@@ -127,11 +127,11 @@ import { ShowTranscriptionComponent } from './user-patient/show-transcription.co
     MdTabsModule,
     MdToolbarModule,
     MdTooltipModule,
-    CdkTableModule,
     TagInputModule,
     TagCloudModule,
     HttpModule,
-    NgbModule.forRoot()
+    NgbModule.forRoot(),
+    AgWordCloudModule.forRoot()
   ],
   providers: [RouteGuard, SocketService],
   bootstrap: [AppComponent],

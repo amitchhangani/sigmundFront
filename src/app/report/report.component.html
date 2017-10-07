@@ -15,18 +15,13 @@
                                     <tbody>
                                         <tr *ngFor="let a of tags">
                                             <td>{{a.text}}</td>
-                                            <td>{{a.weight}}</td>
+                                            <td>{{a.size}}</td>
                                         </tr>
                                         
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="col-sm-7 tag_cloud"><angular-tag-cloud
-        [data]="data"
-        [width]="cloudoptions.width"
-        [height]="cloudoptions.height"
-        [overflow]="cloudoptions.overflow">
-      </angular-tag-cloud></div>
+                            <div AgWordCloud *ngIf="wordData" #word_cloud_chart=ag-word-cloud  [(wordData)]="wordData"></div>
                         </div>
                     </md-tab>
                     <md-tab label="Personality">

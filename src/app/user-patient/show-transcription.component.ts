@@ -32,13 +32,15 @@ import {AgWordCloudModule, AgWordCloudData} from 'angular4-word-cloud';
                                       <tr *ngFor="let p_t of patient_transcription" >
                                       <div class="chat-timeline chat-timeline-right" *ngIf="p_t.transcript.speaker===0">
                                       <div class="chat-timeline-avtar">
-                                        <figure>T</figure>
+                                      <figure *ngIf="!therapist_img" >P</figure>  
+                                      <figure *ngIf="therapist_img"><img style="border-radius : 50%" src="{{image_server_url}}uploads/therapist/{{therapist_img}}"></figure>
                                         <span> Therapist </span></div>
                                       <div class="chat-timeline-content"> {{p_t.transcript.transcript}}</div>
                                     </div>
                                   <div class="chat-timeline chat-timeline-left" *ngIf="p_t.transcript.speaker > 0 ">
                                     <div class="chat-timeline-avtar">
-                                      <figure> P </figure>
+                                    <figure *ngIf="!patient_img" >P</figure>
+                                      <figure *ngIf="patient_img" ><img style="border-radius : 50%" src="{{image_server_url}}uploads/patient/{{patient_img}}"></figure>
                                       <span>Patient</span></div>
                                     <div class="chat-timeline-content">{{p_t.transcript.transcript}}</div>
                                   </div>
@@ -55,7 +57,7 @@ import {AgWordCloudModule, AgWordCloudData} from 'angular4-word-cloud';
           <div class="card-content">
             <h4 class="calldanger-title">Call Danger of Self Harm</h4>
             <figure>
-              <app-heat-map [rangeValue]="danger"></app-heat-map>
+              <app-heat-map [rangeValue]="self_harm"></app-heat-map>
             </figure>
             <h4 class="recommend-title">Recommendations:</h4>
             <div *ngFor="let rec of recommendations; let k = index" class="recommendation-box " [ngClass]="{'openbox': rec.tags.length}">
@@ -156,7 +158,11 @@ export class ShowTranscriptionComponent implements OnInit {
   patient_transcription ;
   tags: any = [];
   tone: any= [];
+  patient_img;
+  therapist_img;
+  self_harm;
   sentiment: any =[];
+  image_server_url = environment.baseUrl;
   wordData: Array<AgWordCloudData>;
   headers = new Headers({
     'Content-Type': 'application/json',
@@ -223,6 +229,13 @@ export class ShowTranscriptionComponent implements OnInit {
             this.tags.push({text:key,size:result.tags[key]});
         }
         this.wordData = this.tags;
+      }).catch(error => console.log(error));
+
+      this.getService(environment.baseUrl + 'transcriptions/getTranscript/' + id, this.options).then(result => {
+
+        this.patient_img = result.data.patient_id.image;
+        this.therapist_img = result.data.user_id.image;
+       this.self_harm = result.data.self_harm;
       }).catch(error => console.log(error));
   }
 

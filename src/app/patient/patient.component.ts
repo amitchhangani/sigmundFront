@@ -82,6 +82,7 @@ show(id: any) {
     localStorage.setItem('patient_id', patient._id);
     this.pat_id = localStorage.getItem('patient_id');
     localStorage.setItem('patient_name_for_chat', patient.name);
+    localStorage.setItem('patient_image', patient.image);
     localStorage.setItem('patient_email_for_chat', patient.email);
     this.router.navigate(['/call-anylsis']);
   }
@@ -89,6 +90,7 @@ show(id: any) {
     // to get id of selected patient
     localStorage.setItem('patient_id', patient_t._id);
     this.pat_id = localStorage.getItem('patient_id');
+    localStorage.setItem('patient_image', patient_t.image);
     localStorage.setItem('patient_name_for_chat', patient_t.name);
     localStorage.setItem('patient_email_for_chat', patient_t.email);
     this.patient_error = '';

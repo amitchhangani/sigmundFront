@@ -89,6 +89,7 @@ export class UserPatientComponent implements OnInit {
       .then(result => {
         this.patient_error = '';
         this.patient = result.data;
+        debugger;
       })
       .catch(error => {
         this.patient_error = 'Patient Recording are not available';
@@ -105,6 +106,8 @@ export class UserPatientComponent implements OnInit {
     .then(result => {
       this.patient_error = '';
       this.patient = result.data;
+
+      debugger;
     })
     .catch(error => {
       this.patient_error = 'Patient Recording are not available';
@@ -124,7 +127,9 @@ export class UserPatientComponent implements OnInit {
   }
 
   call(patient: any) {
+    debugger;
     localStorage.setItem('patient_id', patient.patient_id);
+    localStorage.setItem('patient_image', patient.patient_image);
     localStorage.setItem('patient_name_for_chat', patient.patient_name);
     localStorage.setItem('patient_email_for_chat', patient.patient_email);
     this.router.navigate(['/call-anylsis']);

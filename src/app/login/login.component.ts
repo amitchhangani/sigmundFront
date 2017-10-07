@@ -49,6 +49,7 @@ export class LoginComponent implements OnInit {
           // store user details and jwt token in local storage to keep user logged in between page refreshes
           localStorage.setItem('_token', response.json().data.token);
           localStorage.setItem('therapist_in', response.json().data._id);
+          localStorage.setItem('therapist_loggedin_image',response.json().data.image);
         }
       })
       .subscribe(

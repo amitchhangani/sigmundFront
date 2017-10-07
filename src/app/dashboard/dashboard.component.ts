@@ -84,9 +84,9 @@ export class DashboardComponent implements OnInit {
 
   call(patient: any) {
     localStorage.setItem('patient_id', patient._id);
+    localStorage.setItem('patient_image', patient.image);
     localStorage.setItem('patient_name_for_chat', patient.name);
     localStorage.setItem('patient_email_for_chat', patient.email);
-    debugger;
     this.router.navigate(['/call-anylsis']);
   }
   // delete(id: any) {

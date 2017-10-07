@@ -1,5 +1,5 @@
 import { Declaration } from '@angular/compiler/src/i18n/serializers/xml_helper';
-import { Component, OnInit, Pipe, PipeTransform, Input, AfterViewChecked, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, Pipe, PipeTransform, Input, AfterViewChecked, ElementRef, ViewChild } from '@angular/core';
 import { SocketService } from '../shared/socket/socket.service';
 import { environment } from '../../environments/environment';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
@@ -30,7 +30,7 @@ import {
   templateUrl: 'callanalysis.component.html',
   styleUrls: ['callanalysis.component.css']
 })
-export class CallanalysisComponent implements OnInit, AfterViewChecked {
+export class CallanalysisComponent implements OnInit, AfterViewChecked,OnDestroy {
   @ViewChild('scrollMe') private myScrollContainer: ElementRef;
   @ViewChild('metadata') private fileMetadata: ElementRef;
   output = '#output';
@@ -59,6 +59,8 @@ export class CallanalysisComponent implements OnInit, AfterViewChecked {
   patient_email;
   selectedValue;
   fileduration;
+  image_server_url;
+  live_file_duration = 0;
   foods = [
     {value: 'steak-0', viewValue: 'Steak'},
     {value: 'pizza-1', viewValue: 'Pizza'},
@@ -74,16 +76,19 @@ export class CallanalysisComponent implements OnInit, AfterViewChecked {
   setInt2;
   clearset1;
   clearset2;
+  therapist_image;
+  patient_image;
+  live_rec_interval;
   constructor(private socketService: SocketService, private http: Http, private router: Router) {
     this.socketService.eventCallback$.subscribe(value => {
 
       if (value[0].type === 'chat') {
         if ( Object.prototype.toString.call( value[0].data ) === '[object Array]' ) {
-            if(value[0].patient==localStorage.getItem('patient_id')){
+            if(value[0].patient==localStorage.getItem('patient_id')) {
               this.message = [];
               this.message = value[0].data;
               this.messageCount = this.message.length;
-              this.scrollToBottom();  
+              this.scrollToBottom();
             }
         }else{
             if(value[0].patient==localStorage.getItem('patient_id')){
@@ -161,6 +166,9 @@ export class CallanalysisComponent implements OnInit, AfterViewChecked {
     this.patient_name = localStorage.getItem('patient_name_for_chat');
     this.patient_email = localStorage.getItem('patient_email_for_chat');
     this.selectedValue = localStorage.getItem('patient_id');
+    this.therapist_image = localStorage.getItem('therapist_loggedin_image');
+    this.patient_image = localStorage.getItem('patient_image');
+    this.image_server_url = environment.baseUrl;
     if (localStorage.getItem('patient_id')) {
        this.getService(environment.baseUrl + 'recommendations/getToken').then(result => {
           this.token = result.token;
@@ -202,6 +210,7 @@ export class CallanalysisComponent implements OnInit, AfterViewChecked {
     this.shiftedMessages=[];
     localStorage.setItem('patient_name_for_chat', patient.name);
     localStorage.setItem('patient_email_for_chat', patient.email);
+    localStorage.setItem('patient_image', patient.image);
     localStorage.setItem('patient_id', patient._id);
     this.patient_name = localStorage.getItem('patient_name_for_chat');
     this.patient_email = localStorage.getItem('patient_email_for_chat');
@@ -289,6 +298,7 @@ export class CallanalysisComponent implements OnInit, AfterViewChecked {
   }
 
   startMicRecording() {
+    this.live_rec_interval = setInterval(() => { console.log("herer"); this.live_file_duration++; }, 1000);
     this.headers = new Headers({
       'Content-Type': 'application/json',
       'Accept': 'q=0.8;application/json;q=0.9',
@@ -328,7 +338,17 @@ export class CallanalysisComponent implements OnInit, AfterViewChecked {
   }
 
   stopRec() {
+    clearInterval( this.live_rec_interval);
+    console.log('qqqqq', this.live_file_duration);
     this.stream.stop();
+    this.getService(environment.baseUrl + 'transcriptions/saveDuration/'
+    + this.transcriptId_for_recording + '/' + this.live_rec_interval).then(result => {
+      debugger;
+    }).catch(error => console.log(error));
+  }
+
+  ngOnDestroy() {
+    clearInterval( this.live_rec_interval);
   }
 
   oldTrans = '';
@@ -364,7 +384,7 @@ export class CallanalysisComponent implements OnInit, AfterViewChecked {
     if (this.clearset1) {
       clearInterval(this.setInt1);
     }
-    if (this.setInt2) {
+    if (this.clearset2) {
       clearInterval(this.setInt2);
     }
     this.duration = 0;
@@ -415,7 +435,6 @@ export class CallanalysisComponent implements OnInit, AfterViewChecked {
       // }
       // for progress
       if (temp_duration === Math.floor(this.duration) || temp_duration > Math.floor(this.duration) ) {
-        debugger;
         clearInterval(this.setInt2);
       }else {
         p_sec++;

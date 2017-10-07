@@ -51,16 +51,16 @@
 
               <div class="chat-timeline chat-timeline-right" *ngIf="item.speaker===0">
                 <div class="chat-timeline-avtar">
-                  <figure>T</figure>
+                  <figure> <img style="border-radius : 50%" src="{{image_server_url}}uploads/therapist/{{therapist_image}}"></figure>
                   <span> Therapist </span></div>
-                <div class="chat-timeline-content"> <i (click)="shift(i, item.speaker)" class="fa fa-angle-left fa-2" aria-hidden="true"></i> {{item.transcript}}</div>
+                <div  class="chat-timeline-content"> <i (click)="shift(i, item.speaker)"  class="fa fa-angle-left fa-2 box" aria-hidden="true"></i> {{item.transcript}}</div>
               </div>
 
               <div class="chat-timeline chat-timeline-left" *ngIf="item.speaker > 0 ">
                 <div class="chat-timeline-avtar">
-                  <figure> P </figure>
+                  <figure> <img style="border-radius : 50%" src="{{image_server_url}}uploads/patient/{{patient_image}}"></figure>
                   <span>Patient</span></div>
-                <div class="chat-timeline-content">{{item.transcript}} <i (click)="shift(i, item.speaker)" class="fa fa-angle-right fa-2" aria-hidden="true"></i>
+                <div class="chat-timeline-content">{{item.transcript}} <i (click)="shift(i, item.speaker)" class="fa fa-angle-right fa-2 box" aria-hidden="true"></i>
                 </div>
               </div>
               <!--<chatline *ngFor="let item of chatTimeLine" [chatInfo]="item" [timeLineClass]="item.userChatClass" [chatContent]="item.chatConent"></chatline>-->

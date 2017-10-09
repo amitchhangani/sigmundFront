@@ -79,6 +79,7 @@ export class CallanalysisComponent implements OnInit, AfterViewChecked,OnDestroy
   therapist_image;
   patient_image;
   live_rec_interval;
+  logged_in_id;
   constructor(private socketService: SocketService, private http: Http, private router: Router) {
     this.socketService.eventCallback$.subscribe(value => {
 
@@ -161,12 +162,11 @@ export class CallanalysisComponent implements OnInit, AfterViewChecked,OnDestroy
       }
     }
   }
-
   ngOnInit() {
     this.patient_name = localStorage.getItem('patient_name_for_chat');
     this.patient_email = localStorage.getItem('patient_email_for_chat');
     this.selectedValue = localStorage.getItem('patient_id');
-    this.therapist_image = localStorage.getItem('therapist_loggedin_image');
+    this.logged_in_id = localStorage.getItem('therapist_in');
     this.patient_image = localStorage.getItem('patient_image');
     this.image_server_url = environment.baseUrl;
     if (localStorage.getItem('patient_id')) {
@@ -189,6 +189,11 @@ export class CallanalysisComponent implements OnInit, AfterViewChecked,OnDestroy
     })
     .catch(error => console.log(error));
     this.scrollToBottom();
+
+    this.getService(environment.baseUrl + 'user/'
+    + this.logged_in_id).then(result => {
+      this.therapist_image  = result.data.image;
+    }).catch(error => console.log(error));
   }
 
  ngAfterViewChecked() {        
